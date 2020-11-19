@@ -1,9 +1,11 @@
-package com.example.memo
+package com.example.memo.view.activity
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import com.example.memo.BaseActivity
+import com.example.memo.R
 import com.example.memo.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {

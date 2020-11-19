@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Memo</string>
-    <string name="desc_activity_main_fab_add">add_new_note</string>
+    <string name="desc_activity_main_fab_add">add_new</string>
+    <string name="activity_main_tab_note">笔记</string>
+    <string name="activity_main_tab_do">待办</string>
+    <string name="fragment_note_et_search">搜索笔记</string>
 </resources>

@@ -32,7 +32,7 @@
            android:id="@+id/toolbar_iv_down"
            android:layout_width="25dp"
            android:layout_height="25dp"
-           android:src="@drawable/ic_down"
+           android:src="@drawable/ic_down_black"
            app:layout_constraintTop_toTopOf="@id/toolbar_tv_title"
            app:layout_constraintStart_toEndOf="@id/toolbar_tv_title"
            app:layout_constraintBottom_toBottomOf="@id/toolbar_tv_title"/>

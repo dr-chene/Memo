@@ -3,48 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fitsSystemWindows="true">
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        android:background="#FFF5F5F5">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/activity_main_toolbar"
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/activity_main_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF5F5F5"
+                    android:minHeight="?attr/actionBarSize"
+                    app:contentInsetStart="0dp"
+                    app:layoutDescription="@xml/ms_activity_main_toolbar_header"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+                    <include
+                        layout="@layout/motion_activity_main_toolbar_header"
+                        bind:titile="@{}"/>
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.example.memo.view.fragment.NoteFragment"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/activity_main_fab_add"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                app:contentInsetStart="0dp"
-                app:layoutDescription="@xml/ms_activity_main_toolbar_header"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+                android:src="@drawable/ic_fab_add"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                app:fabSize="mini"
+                android:contentDescription="@string/desc_activity_main_fab_add" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-                <include
-                    layout="@layout/motion_activity_main_toolbar_header"
-                    bind:titile="@{}"/>
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
+        <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            app:spanCount="2"/>
+            android:backgroundTint="#80EEEEEE"
+            app:tabIndicatorHeight="0dp">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/activity_main_fab_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_fab_add"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
-            app:fabSize="mini"
-            android:contentDescription="@string/desc_activity_main_fab_add" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <com.google.android.material.tabs.TabItem
+                android:icon="@drawable/ic_tab_note"
+                android:text="@string/activity_main_tab_note"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.tabs.TabItem
+                android:icon="@drawable/ic_tab_do"
+                android:text="@string/activity_main_tab_do"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.tabs.TabLayout>
+    </LinearLayout>
 </layout>
