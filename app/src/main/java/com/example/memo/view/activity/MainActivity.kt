@@ -7,10 +7,13 @@ import androidx.databinding.DataBindingUtil
 import com.example.memo.BaseActivity
 import com.example.memo.R
 import com.example.memo.databinding.ActivityMainBinding
+import com.example.memo.viewmodel.MainActivityViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +25,7 @@ class MainActivity : BaseActivity() {
 
     private fun initView() {
         setSupportActionBar(binding.activityMainToolbar)
+        binding.viewmodel = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
