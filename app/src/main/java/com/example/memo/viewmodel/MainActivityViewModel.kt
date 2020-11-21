@@ -12,20 +12,20 @@ class MainActivityViewModel() : ViewModel(){
         get() = _tabSelected
     private val _tabSelected: MutableLiveData<Int> = MutableLiveData(0)
     fun selectTab(tab: Int){
-        _tabSelected.value = tab
+        _tabSelected.postValue(tab)
     }
 
     val title: LiveData<String>
         get() = _title
     private val _title: MutableLiveData<String> = MutableLiveData(if (_tabSelected.value == 0)"全部笔记" else "全部待办")
     fun selectTag(tag: String){
-        _title.value = tag
+        _title.postValue(tag)
     }
 
     val subTitle: LiveData<String>
         get() = _subTitle
     private val _subTitle: MutableLiveData<String> = MutableLiveData("")
     fun sumNum(sum: Int){
-        _subTitle.value = "$sum 条" + if (_tabSelected.value == 0) "笔记" else "待办"
+        _subTitle.postValue("$sum 条" + if (_tabSelected.value == 0) "笔记" else "待办")
     }
 }

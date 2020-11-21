@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Memo">
-        <activity android:name=".view.activity.DoEditActivity"></activity>
+        <activity android:name=".view.activity.DoEditActivity" />
         <activity android:name=".view.activity.NoteEditActivity" />
         <activity android:name=".view.activity.MainActivity">
             <intent-filter>

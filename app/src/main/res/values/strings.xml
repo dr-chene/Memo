@@ -4,4 +4,9 @@
     <string name="activity_main_tab_note">笔记</string>
     <string name="activity_main_tab_do">待办</string>
     <string name="fragment_note_et_search">搜索笔记</string>
+    <string name="activity_note_edit_tab_text">文本编辑</string>
+    <string name="activity_note_edit_tab_img">图片</string>
+    <string name="activity_note_edit_star">收藏</string>
+    <string name="activity_note_edit_title_hint">标题</string>
+    <string name="pop_text_edit_tv_title">文本编辑</string>
 </resources>

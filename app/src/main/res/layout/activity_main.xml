@@ -7,6 +7,9 @@
         <variable
             name="viewmodel"
             type="com.example.memo.viewmodel.MainActivityViewModel" />
+        <variable
+            name="addClick"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <LinearLayout
@@ -58,10 +61,12 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="8dp"
                 app:fabSize="mini"
+                android:onClick="@{addClick}"
                 android:contentDescription="@string/desc_activity_main_fab_add" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/activity_main_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#80EEEEEE"
