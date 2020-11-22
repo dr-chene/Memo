@@ -13,6 +13,8 @@ import com.example.memo.viewmodel.NoteViwModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -21,9 +23,9 @@ Created by chene on @date 20-11-19 下午2:49
 class NoteFragment : Fragment() {
 
     private lateinit var binding: FragmentNoteBinding
-    private val noteViwModel: NoteViwModel by viewModel()
-    private val mainViewModel: MainActivityViewModel by viewModel()
-    private val adapter = NoteRecyclerViewAdapter()
+    private val noteViwModel: NoteViwModel by sharedViewModel()
+    private val mainViewModel: MainActivityViewModel by sharedViewModel()
+    private val adapter : NoteRecyclerViewAdapter by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,

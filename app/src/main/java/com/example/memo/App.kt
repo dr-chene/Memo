@@ -2,8 +2,7 @@ package com.example.memo
 
 import android.app.Application
 import android.content.Context
-import com.example.memo.di.mainModule
-import com.example.memo.di.noteModule
+import com.example.memo.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -19,7 +18,7 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(mainModule, noteModule)
+            modules(mainActivityModule, noteEditActivityModule, appDataBaseModule, classModule)
         }
     }
 

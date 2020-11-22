@@ -7,34 +7,6 @@
         <import type="com.example.memo.ext.LongExtKt" />
 
         <variable
-            name="backClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
-            name="saveClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
-            name="redoClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
-            name="undoClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
-            name="textEditClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
-            name="imgClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
-            name="starClick"
-            type="android.view.View.OnClickListener" />
-
-        <variable
             name="note"
             type="com.example.memo.model.bean.Note" />
     </data>
@@ -42,13 +14,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:background="#FAFAFA">
 
         <ImageView
             android:id="@+id/activity_note_edit_iv_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:onClick="@{backClick}"
             android:src="@drawable/ic_back_arrow"
             android:layout_marginStart="25dp"
             android:layout_marginTop="25dp"
@@ -60,7 +32,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="25dp"
-            android:onClick="@{redoClick}"
             android:src="@drawable/ic_redo_grey"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_save"
             app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_save" />
@@ -70,7 +41,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="25dp"
-            android:onClick="@{undoClick}"
             android:src="@drawable/ic_undo_grey"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_redo"
             app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_save" />
@@ -79,7 +49,6 @@
             android:id="@+id/activity_note_edit_iv_save"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:onClick="@{saveClick}"
             android:src="@drawable/ic_ok"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="25dp"
@@ -91,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@color/white"
+            android:background="#FAFAFA"
             android:hint="@string/activity_note_edit_title_hint"
             android:maxLength="45"
             android:text="@={note.title}"
@@ -106,7 +75,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_tag"
+            android:src="@drawable/ic_tag_empty"
             app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
             app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title" />
 
@@ -150,7 +119,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="15dp"
-            android:background="@color/white"
+            android:background="#FAFAFA"
             android:gravity="top|start"
             android:text="@={note.content}"
             android:textColor="@color/black"
@@ -176,8 +145,7 @@
             app:layout_constraintStart_toStartOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tv_tab_text"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_img"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:onClick="@{textEditClick}"/>
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/activity_note_edit_tv_tab_text"
@@ -200,8 +168,7 @@
             app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_text"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tv_tab_img"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_star"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:onClick="@{imgClick}"/>
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/activity_note_edit_tv_tab_img"
@@ -224,8 +191,7 @@
             app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_img"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tv_tab_star"
             app:layout_constraintEnd_toEndOf="@id/activity_note_edit_tab_bg_view"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:onClick="@{starClick}"/>
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/activity_note_edit_tv_tab_star"
@@ -241,7 +207,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/activity_note_edit_select_pop_fragment_container"
-            android:name="com.example.memo.view.fragment.PopTextEditSelectFragment"
+            android:name="com.example.memo.view.fragment.TextEditSelectFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -10,7 +10,7 @@ import com.example.memo.databinding.FragmentDoBinding
 /**
 Created by chene on @date 20-11-19 下午2:50
  **/
-class DoFragment : Fragment() {
+class ToDoFragment : Fragment() {
 
     private lateinit var binding: FragmentDoBinding
 

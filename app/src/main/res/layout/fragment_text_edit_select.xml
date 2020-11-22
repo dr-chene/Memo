@@ -6,6 +6,9 @@
         <variable
             name="colorSelect"
             type="android.view.View.OnClickListener" />
+        <variable
+            name="closeClick"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +39,8 @@
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintTop_toTopOf="@id/pop_text_edit_tv_title"
             app:layout_constraintBottom_toBottomOf="@id/pop_text_edit_tv_title"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{closeClick}"/>
 
         <ImageView
             android:id="@+id/pop_text_edit_iv_bold"
@@ -120,6 +124,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <SeekBar
+            android:id="@+id/fragment_pop_text_edit_select_seek_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/pop_text_edit_iv_text_min"
