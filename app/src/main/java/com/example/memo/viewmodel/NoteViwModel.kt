@@ -17,6 +17,8 @@ class NoteViwModel internal constructor(
 
     fun getNoteByTime(time: Long) = noteRepository.getNoteByTime(time)
 
+    fun getStarNote() = noteRepository.getStarNote(true)
+
     suspend fun insertNote(note: Note){
         noteRepository.insertNote(note)
     }

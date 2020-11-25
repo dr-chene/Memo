@@ -7,12 +7,13 @@ import androidx.lifecycle.ViewModel
 /**
 Created by chene on @date 20-11-20 上午9:00
  **/
-class MainActivityViewModel() : ViewModel(){
+class MainActivityViewModel : ViewModel(){
     val tabSelected: LiveData<Int>
         get() = _tabSelected
     private val _tabSelected: MutableLiveData<Int> = MutableLiveData(0)
     fun selectTab(tab: Int){
         _tabSelected.postValue(tab)
+        selectTag(if (tab == 0)"全部笔记" else "全部待办")
     }
 
     val title: LiveData<String>

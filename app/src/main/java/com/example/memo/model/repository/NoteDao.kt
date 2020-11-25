@@ -16,11 +16,14 @@ interface NoteDao {
     @Query("SELECT * FROM note ORDER BY changeTime DESC")
     fun getAllNotes(): LiveData<List<Note>>
 
-    @Query("SELECT * FROM note WHERE tag = :tag")
+    @Query("SELECT * FROM note WHERE tag = :tag ORDER BY changeTime DESC")
     fun getNotesByTag(tag: String): LiveData<List<Note>>
 
-    @Query("SELECT * FROM note WHERE createTime = :createTime LIMIT 1")
-    fun getNoteByCreateTime(createTime: Long): LiveData<Note>
+    @Query("SELECT * FROM note WHERE createTime = :createTime ORDER BY changeTime DESC")
+    fun getNoteByCreateTime(createTime: Long): LiveData<List<Note>>
+
+    @Query("SELECT * FROM note WHERE star = :star ORDER BY changeTime DESC")
+    fun getStarNote(star: Boolean): LiveData<List<Note>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)

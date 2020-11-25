@@ -10,39 +10,39 @@ import androidx.lifecycle.ViewModel
 Created by chene on @date 20-11-21 下午4:59
  **/
 class TextEditSelectViewModel : ViewModel(){
-    val textColor: Int
+    val textColor: LiveData<Int>
         get() = _textColor
-    private var _textColor: Int = Color.BLACK
+    private var _textColor: MutableLiveData<Int> = MutableLiveData(Color.BLACK)
     fun colorSelect(color: Int){
-        _textColor = color
+        _textColor.postValue(color)
     }
 
-    val isBold: Boolean
+    val isBold: LiveData<Boolean>
         get() = _isBold
-    private var _isBold: Boolean =  false
+    private var _isBold: MutableLiveData<Boolean> =  MutableLiveData(false)
     fun boldSelect(isSelect: Boolean){
-        _isBold = isSelect
+        _isBold.postValue(isSelect)
     }
 
-    val isItalic: Boolean
+    val isItalic: LiveData<Boolean>
         get() = _isItalic
-    private var _isItalic: Boolean =  false
+    private var _isItalic: MutableLiveData<Boolean> =  MutableLiveData(false)
     fun italicSelect(isSelect: Boolean){
-        _isItalic = isSelect
+        _isItalic.postValue(isSelect)
     }
 
-    val isUnderLine: Boolean
+    val isUnderLine: LiveData<Boolean>
         get() = _isUnderLine
-    private var _isUnderLine: Boolean = false
+    private var _isUnderLine: MutableLiveData<Boolean> = MutableLiveData(false)
     fun underLineSelect(isSelect: Boolean){
-        _isUnderLine = isSelect
+        _isUnderLine.postValue(isSelect)
     }
 
-    val textSize: Float
+    val textSize: LiveData<Float>
         get() = _textSize
-    private var _textSize: Float = 1.0f
+    private var _textSize: MutableLiveData<Float> = MutableLiveData(1.0f)
     fun setTextSize(textSize: Float){
-        _textSize = 1 + textSize
+        _textSize.postValue(1 + textSize)
     }
 
     val align: LiveData<Int>

@@ -1,21 +1,17 @@
 package com.example.memo.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.memo.databinding.FragmentNoteBinding
-import com.example.memo.model.bean.Note
 import com.example.memo.view.adapter.NoteRecyclerViewAdapter
 import com.example.memo.viewmodel.MainActivityViewModel
 import com.example.memo.viewmodel.NoteViwModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
 Created by chene on @date 20-11-19 下午2:49
@@ -23,7 +19,7 @@ Created by chene on @date 20-11-19 下午2:49
 class NoteFragment : Fragment() {
 
     private lateinit var binding: FragmentNoteBinding
-    private val noteViwModel: NoteViwModel by sharedViewModel()
+    private val noteViewModel: NoteViwModel by sharedViewModel()
     private val mainViewModel: MainActivityViewModel by sharedViewModel()
     private val adapter : NoteRecyclerViewAdapter by inject()
 
@@ -31,7 +27,7 @@ class NoteFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNoteBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
@@ -42,7 +38,7 @@ class NoteFragment : Fragment() {
     }
 
     private fun initView(){
-
+        binding.fragmentNoteRv.adapter = adapter
     }
 
     private fun subscribe(){
@@ -52,8 +48,9 @@ class NoteFragment : Fragment() {
     }
 
     private fun showNoteByTag(tag: String) {
-        val notes = if (tag == "全部笔记") noteViwModel.getNotes()
-            else noteViwModel.getNotesByTag(tag)
+        Log.d("TAG_08", "showNoteByTag: show")
+        val notes = if (tag == "全部笔记") noteViewModel.getNotes()
+            else noteViewModel.getNotesByTag(tag)
         notes.observe(viewLifecycleOwner){
             adapter.submitList(it)
         }

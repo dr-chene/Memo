@@ -8,9 +8,9 @@
         android:layout_height="match_parent"
         android:background="#FAFAFA">
 
-         <include
-             android:id="@+id/pop_window_tag_head"
-             layout="@layout/recycle_item_tag" />
+        <include
+            android:id="@+id/pop_window_tag_head"
+            layout="@layout/include_pop_window_tag_head" />
 
         <View
             android:id="@+id/pop_window_tag_div_line"
@@ -31,7 +31,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pop_window_tag_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/recycle_item_tag"

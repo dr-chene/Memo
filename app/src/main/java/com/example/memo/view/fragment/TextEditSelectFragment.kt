@@ -2,9 +2,11 @@ package com.example.memo.view.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.memo.databinding.FragmentTextEditSelectBinding
@@ -21,18 +23,11 @@ class TextEditSelectFragment: Fragment() {
     private val textEditSelectViewModel: TextEditSelectViewModel by sharedViewModel()
     private lateinit var curSelect: ColorCircleView
 
-    private val colorSelect = View.OnClickListener {
-        curSelect.unSelected()
-        curSelect = it as ColorCircleView
-        textEditSelectViewModel.colorSelect(Color.parseColor(curSelect.color))
-        curSelect.selected()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTextEditSelectBinding.inflate(inflater, container, false)
         context ?: return binding.root
 
@@ -42,8 +37,24 @@ class TextEditSelectFragment: Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.apply {
+            listOf(popTextEditIvBlack, popTextEditIvPurple, popTextEditIvCyan, popTextEditIvBlue, popTextEditIvGreen, popTextEditIvYellow, popTextEditIvRed).forEach {
+                if (curSelect !== it){
+                    curSelect.unSelected()
+                }
+            }
+        }
+    }
+
     private fun initView() {
-        binding.colorSelect = colorSelect
+        binding.colorSelect = View.OnClickListener {
+            curSelect.unSelected()
+            curSelect = it as ColorCircleView
+            textEditSelectViewModel.colorSelect(Color.parseColor(curSelect.color))
+            curSelect.selected()
+        }
 
         binding.apply {
             popTextEditIvBlack.color = "#000000"
@@ -54,38 +65,33 @@ class TextEditSelectFragment: Fragment() {
             popTextEditIvYellow.color = "#FFEB3B"
             popTextEditIvRed.color = "#f44336"
         }
+
         binding.popTextEditIvBlack.length.observe(viewLifecycleOwner){
             binding.popTextEditIvBlack.selected()
             curSelect = binding.popTextEditIvBlack
         }
 
         binding.popTextEditIvBold.setOnClickListener {
-            if (textEditSelectViewModel.isBold) {
-                it.isSelected = false
-                textEditSelectViewModel.boldSelect(false)
-            } else {
-                it.isSelected = true
-                textEditSelectViewModel.boldSelect(true)
-            }
+            textEditSelectViewModel.boldSelect(!it.isSelected)
         }
         binding.popTextEditIvItalic.setOnClickListener {
-            if (textEditSelectViewModel.isItalic) {
-                it.isSelected = false
-                textEditSelectViewModel.italicSelect(false)
-            } else {
-                it.isSelected = true
-                textEditSelectViewModel.italicSelect(true)
-            }
+            textEditSelectViewModel.italicSelect(!it.isSelected)
         }
         binding.popTextEditIvUnderline.setOnClickListener {
-            if (textEditSelectViewModel.isUnderLine) {
-                it.isSelected = false
-                textEditSelectViewModel.underLineSelect(false)
-            } else {
-                it.isSelected = true
-                textEditSelectViewModel.underLineSelect(true)
-            }
+            textEditSelectViewModel.underLineSelect(!it.isSelected)
         }
+        binding.fragmentPopTextEditSelectSeekBar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    textEditSelectViewModel.setTextSize((progress - 3) / 10f)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
         binding.popTextEditIvAlignLeft.setOnClickListener {
             textEditSelectViewModel.setAlignDirection(TextView.TEXT_ALIGNMENT_TEXT_START)
         }
@@ -96,9 +102,6 @@ class TextEditSelectFragment: Fragment() {
             textEditSelectViewModel.setAlignDirection(TextView.TEXT_ALIGNMENT_TEXT_END)
         }
         binding.setCloseClick {
-            textEditSelectViewModel.setTextSize(binding.fragmentPopTextEditSelectSeekBar.let { s ->
-                (s.progress - 30) / 100f
-            })
             textEditSelectViewModel.setSelectShow(false)
         }
     }
@@ -120,6 +123,17 @@ class TextEditSelectFragment: Fragment() {
                     binding.popTextEditIvAlignRight.isSelected = true
                     curSelect = binding.popTextEditIvAlignRight
                 }
+            }
+        }
+        textEditSelectViewModel.apply {
+            isBold.observe(viewLifecycleOwner){
+                binding.popTextEditIvBold.isSelected = it
+            }
+            isItalic.observe(viewLifecycleOwner){
+                binding.popTextEditIvItalic.isSelected = it
+            }
+            isUnderLine.observe(viewLifecycleOwner){
+                binding.popTextEditIvUnderline.isSelected = it
             }
         }
     }

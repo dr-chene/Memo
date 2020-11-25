@@ -18,7 +18,7 @@ class ToDoFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDoBinding.inflate(inflater, container, false)
         context ?: return binding.root
 

@@ -3,10 +3,7 @@ package com.example.memo.view.activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import android.widget.Toast
@@ -38,6 +35,7 @@ class MainActivity : BaseActivity() {
     private val noteFragment: NoteFragment by inject()
     private val todoFragment: ToDoFragment by inject()
     private lateinit var allTag: Tag
+    private lateinit var starTag: Tag
     private lateinit var eBookTag :Tag
     private lateinit var travelTag: Tag
     private lateinit var personalTag: Tag
@@ -90,18 +88,24 @@ class MainActivity : BaseActivity() {
             tabSelect("待办")
         }
         initTags()
-        mainViewModel.selectTag(allTag.tag)
-        mainViewModel.sumNum(allTag.count)
     }
 
     private fun subscribe(){
         noteViewModel.getNotes().observe(this){
             allTag.count = it.size
+            tagsBinding.popWindowTagHead.popWindowTagAll.tag = allTag
+            mainViewModel.selectTag(allTag.tag)
+            mainViewModel.sumNum(allTag.count)
+        }
+        noteViewModel.getStarNote().observe(this){
+            starTag.count = it.size
+            tagsBinding.popWindowTagHead.popWindowTagStar.tag = starTag
         }
         tags.forEach { tag ->
             noteViewModel.getNotesByTag(tag.tag).observe(this){
                 tag.count = it.size
             }
+            tagsBinding.executePendingBindings()
         }
         mainViewModel.title.observe(this){
             binding.activityMainIncludeToolbar.toolbarTvTitle.text = it
@@ -148,6 +152,7 @@ class MainActivity : BaseActivity() {
 
     private fun initTags() {
         allTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_note_grey, theme), "全部笔记", 0) }
+        starTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_star_grey, theme), "收藏",  0) }
         eBookTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_orange, theme), Tag.TAG_E_BOOK, 0) }
         travelTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_yellow, theme), Tag.TAG_TRAVEL, 0) }
         personalTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_blue, theme), Tag.TAG_PERSONAL, 0) }
@@ -155,11 +160,17 @@ class MainActivity : BaseActivity() {
         workTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_red, theme), Tag.TAG_WORK, 0) }
         nullTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_empty, theme), Tag.TAG_NULL, 0) }
         tags = listOf(eBookTag, travelTag, personalTag, lifeTag, workTag, nullTag)
-        tagsBinding.popWindowTagHead.tag = allTag
-        tagsBinding.popWindowTagHead.root.setOnClickListener {
+        tagsBinding.popWindowTagHead.popWindowTagAll.tag = allTag
+        tagsBinding.popWindowTagHead.popWindowTagStar.tag = starTag
+        tagsBinding.popWindowTagHead.popWindowTagAll.root.setOnClickListener {
             mainViewModel.selectTag(allTag.tag)
             mainViewModel.sumNum(allTag.count)
         }
+        tagsBinding.popWindowTagHead.popWindowTagStar.root.setOnClickListener {
+            mainViewModel.selectTag(starTag.tag)
+            mainViewModel.sumNum(starTag.count)
+        }
+        tagsBinding.popWindowTagHead.popWindowTagStar.recycleItemTagLine.visibility = View.GONE
     }
 
     private fun showTags() {

@@ -15,6 +15,8 @@ class NoteRepository (
 
     fun getNoteByTime(time: Long) = noteDao.getNoteByCreateTime(time)
 
+    fun getStarNote(star: Boolean) = noteDao.getStarNote(star)
+
     suspend fun insertNote(note: Note) {
         noteDao.insertNote(note)
     }

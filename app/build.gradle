@@ -50,7 +50,7 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
-    //依赖注入库：koin3
+    //依赖注入库：koin
     implementation "org.koin:koin-android-viewmodel:$koin_version"
 
 
@@ -64,4 +64,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+
+    implementation "com.google.code.gson:gson:$gson_version"
 }

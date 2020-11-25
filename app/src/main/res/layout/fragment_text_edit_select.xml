@@ -131,8 +131,8 @@
             app:layout_constraintEnd_toStartOf="@id/pop_text_edit_iv_text_max"
             app:layout_constraintTop_toTopOf="@id/pop_text_edit_iv_text_max"
             app:layout_constraintBottom_toBottomOf="@id/pop_text_edit_iv_text_max"
-            android:max="100"
-            android:progress="30"/>
+            android:max="10"
+            android:progress="3"/>
 
         <View
             android:id="@+id/pop_text_edit_text_line"
