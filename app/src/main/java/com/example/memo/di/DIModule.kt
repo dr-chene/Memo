@@ -55,4 +55,8 @@ val noteEditActivityModule = module {
 val classModule = module {
 
     factory { (drawable: Drawable, tag: String, count: Int) -> Tag(drawable, tag, count) }
+
+    factory { (cap: Int) -> NoteEditHelper.Cache(cap) }
+
+    factory { (cap: Int) ->NoteEditHelper.RedoCache(cap) }
 }

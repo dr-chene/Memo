@@ -21,28 +21,28 @@ class NoteEditHelper(
     val operation: MutableMap<Location, List<CharacterStyle>>
 ) {
 
-//    private val redoCache by inject(RedoCache::class.java) { parametersOf(6) }
-//    private val undoCache by inject(Cache::class.java) { parametersOf(6) }
-//
-//    val isRedo: LiveData<Boolean>
-//        get() = _isRedo
-//    private val _isRedo: MutableLiveData<Boolean> = MutableLiveData(false)
-//    private fun setRedoEdit(r: Boolean) {
-//        _isRedo.postValue(r)
-//    }
-//
-//    val isUndo: LiveData<Boolean>
-//        get() = _isUndo
-//    private val _isUndo: MutableLiveData<Boolean> = MutableLiveData(false)
-//    private fun setUndoEdit(r: Boolean) {
-//        _isUndo.postValue(r)
-//    }
+    private val redoCache by inject(RedoCache::class.java) { parametersOf(6) }
+    private val undoCache by inject(Cache::class.java) { parametersOf(6) }
+
+    val isRedo: LiveData<Boolean>
+        get() = _isRedo
+    private val _isRedo: MutableLiveData<Boolean> = MutableLiveData(false)
+    private fun setRedoEdit(r: Boolean) {
+        _isRedo.postValue(r)
+    }
+
+    val isUndo: LiveData<Boolean>
+        get() = _isUndo
+    private val _isUndo: MutableLiveData<Boolean> = MutableLiveData(false)
+    private fun setUndoEdit(r: Boolean) {
+        _isUndo.postValue(r)
+    }
 
     fun write(s: Editable, loc: Location, styles: List<CharacterStyle>, isLoad: Boolean) {
         if (!isLoad) {
             operation[loc] = styles
             Log.d("TAG_12", "write: ${operation[loc]?.map { it.autoToString() }.toString()}")
-            val count = loc.end -loc.start
+            val count = loc.end - loc.start
             operation.keys.forEach {
                 if (loc != it) {
                     if (loc.start <= it.start) {
@@ -53,41 +53,52 @@ class NoteEditHelper(
                     }
                 }
             }
+            undoCache.push(loc)
+            setUndoEdit(true)
         }
-        operation.toSortedMap{ l1, l2 ->
+        operation.toSortedMap { l1, l2 ->
             l1.start - l2.start
         }
         Log.d("TAG_12", "write operation size: ${operation.size}")
         load(s)
     }
 
-//    fun redo(s: Editable) = synchronized(s) {
-//        redoCache.pop()?.let {
-//            undoCache.push(it)
-//            setUndoEdit(true)
-//            s.insert(s.length - 1, redoCache.redoStr.pop())
-//            redoCache.redoSpans.pop()?.forEach { style ->
-//                s.setSpan(style, it.start, it.end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//            }
-//            if (redoCache.array.size == 0) {
-//                setRedoEdit(false)
-//            }
-//        }
-//    }
-//
-//    fun undo(s: Editable) = synchronized(s) {
-//        undoCache.pop()?.let {
-//            operation[it]?.let { list ->
-//                redoCache.push(it, list, s.substring(it.start, it.end))
-//                setRedoEdit(true)
-//            }
-//            operation.remove(it)
-//            s.delete(it.start, it.end)
-//            if (undoCache.array.size == 0) {
-//                setUndoEdit(false)
-//            }
-//        }
-//    }
+    fun redo(s: Editable) = synchronized(s) {
+        redoCache.pop()?.let {
+            undoCache.push(it)
+            setUndoEdit(true)
+            s.insert(it.start, redoCache.redoStr.pop())
+            redoCache.redoSpans.pop()?.forEach { style ->
+                s.setSpan(style, it.start, it.end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            if (redoCache.array.size == 0) {
+                setRedoEdit(false)
+            }
+        }
+    }
+
+    fun undo(s: Editable) = synchronized(s) {
+        undoCache.pop()?.let {
+            operation[it]?.let { list ->
+                redoCache.push(it, list, s.substring(it.start, it.end))
+                setRedoEdit(true)
+                s.delete(it.start, it.end)
+                val count = it.end - it.start
+                operation.keys.forEach { loc ->
+                    if (it.start < loc.start) {
+                        loc.start -= count
+                        loc.end -= count
+                    } else if (loc.end > it.start) {
+                        loc.end -= count
+                    }
+                }
+                operation.remove(it)
+                if (undoCache.array.size == 0) {
+                    setUndoEdit(false)
+                }
+            }
+        }
+    }
 
     private fun load(s: Editable) {
         var i = 0
@@ -101,30 +112,30 @@ class NoteEditHelper(
         }
     }
 
-//    open class Cache(
-//        private val capacity: Int
-//    ) {
-//        val array: MutableList<Location> = mutableListOf()
-//
-//        fun push(v: Location) {
-//            array.push(v, capacity)
-//        }
-//
-//        fun pop(): Location? = array.pop()
-//    }
-//
-//    class RedoCache(
-//        private val cap: Int
-//    ) : Cache(cap) {
-//        val redoSpans: MutableList<List<CharacterStyle>> = mutableListOf()
-//        val redoStr: MutableList<String> = mutableListOf()
-//
-//        fun push(v: Location, spans: List<CharacterStyle>, str: String) {
-//            array.push(v, cap)
-//            redoSpans.push(spans, cap)
-//            redoStr.push(str, cap)
-//        }
-//    }
+    open class Cache(
+        private val capacity: Int
+    ) {
+        val array: MutableList<Location> = mutableListOf()
+
+        fun push(v: Location) {
+            array.push(v, capacity)
+        }
+
+        fun pop(): Location? = array.pop()
+    }
+
+    class RedoCache(
+        private val cap: Int
+    ) : Cache(cap) {
+        val redoSpans: MutableList<List<CharacterStyle>> = mutableListOf()
+        val redoStr: MutableList<String> = mutableListOf()
+
+        fun push(v: Location, spans: List<CharacterStyle>, str: String) {
+            array.push(v, cap)
+            redoSpans.push(spans, cap)
+            redoStr.push(str, cap)
+        }
+    }
 }
 
 fun CharacterStyle.autoToString() =

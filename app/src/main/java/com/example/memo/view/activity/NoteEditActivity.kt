@@ -83,10 +83,10 @@ NoteEditActivity : BaseActivity() {
             }
         }
         binding.activityNoteEditIvRedo.setOnClickListener {
-//            noteEditHelper.redo(binding.activityNoteEditContent.text)
+            noteEditHelper.redo(binding.activityNoteEditContent.text)
         }
         binding.activityNoteEditIvUndo.setOnClickListener {
-//            noteEditHelper.undo(binding.activityNoteEditContent.text)
+            noteEditHelper.undo(binding.activityNoteEditContent.text)
         }
         binding.activityNoteEditIvImg.setOnClickListener {
             TODO()
@@ -209,7 +209,7 @@ NoteEditActivity : BaseActivity() {
                     )
                 }
                 binding.note = note
-//                noteEditHelperSubscribe()
+                noteEditHelperSubscribe()
             }
     }
 
@@ -249,30 +249,30 @@ NoteEditActivity : BaseActivity() {
         }
     }
 
-//    private fun noteEditHelperSubscribe() {
-//        noteEditHelper.isRedo.observe(this) {
-//            binding.activityNoteEditIvRedo.apply {
-//                if (it) {
-//                    isSelected = true
-//                    isClickable = true
-//                } else {
-//                    isSelected = false
-//                    isClickable = false
-//                }
-//            }
-//        }
-//        noteEditHelper.isUndo.observe(this) {
-//            binding.activityNoteEditIvUndo.apply {
-//                if (it) {
-//                    isSelected = true
-//                    isClickable = true
-//                } else {
-//                    isSelected = false
-//                    isClickable = false
-//                }
-//            }
-//        }
-//    }
+    private fun noteEditHelperSubscribe() {
+        noteEditHelper.isRedo.observe(this) {
+            binding.activityNoteEditIvRedo.apply {
+                if (it) {
+                    isSelected = true
+                    isClickable = true
+                } else {
+                    isSelected = false
+                    isClickable = false
+                }
+            }
+        }
+        noteEditHelper.isUndo.observe(this) {
+            binding.activityNoteEditIvUndo.apply {
+                if (it) {
+                    isSelected = true
+                    isClickable = true
+                } else {
+                    isSelected = false
+                    isClickable = false
+                }
+            }
+        }
+    }
 
     private fun showIcons() {
         binding.apply {

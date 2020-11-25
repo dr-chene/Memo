@@ -32,7 +32,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="25dp"
-            android:src="@drawable/ic_redo_grey"
+            android:src="@drawable/ic_redo"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_save"
             app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_save" />
 
@@ -41,7 +41,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="25dp"
-            android:src="@drawable/ic_undo_grey"
+            android:src="@drawable/ic_undo"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_redo"
             app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_save" />
 
