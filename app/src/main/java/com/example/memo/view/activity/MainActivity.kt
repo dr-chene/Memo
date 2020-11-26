@@ -43,8 +43,9 @@ class MainActivity : BaseActivity() {
     private lateinit var workTag: Tag
     private lateinit var nullTag: Tag
     private lateinit var tags: List<Tag>
-    private var popTag: PopupWindow? = null
+    private lateinit var popTag: PopupWindow
     private var isRotate = false
+    private lateinit var tagsAdapter: TagRecyclerViewAdapter
     private val toRotateAnim = AnimationUtils.loadAnimation(App.context, R.anim.rotate_to).apply {
         fillAfter = true
     }
@@ -58,7 +59,6 @@ class MainActivity : BaseActivity() {
         makeStatusBarTransparent()
         makeStatusBarIconDark()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        tagsBinding = PopWindowTagBinding.inflate(LayoutInflater.from(this))
 
         initView()
         subscribe()
@@ -104,12 +104,12 @@ class MainActivity : BaseActivity() {
         tags.forEach { tag ->
             noteViewModel.getNotesByTag(tag.tag).observe(this){
                 tag.count = it.size
+                tagsAdapter.notifyDataSetChanged()
             }
-            tagsBinding.executePendingBindings()
         }
         mainViewModel.title.observe(this){
             binding.activityMainIncludeToolbar.toolbarTvTitle.text = it
-            popTag?.dismiss()
+            popTag.dismiss()
         }
         mainViewModel.subTitle.observe(this){
             binding.activityMainIncludeToolbar.toolbarTvSubtitle.text = it
@@ -160,6 +160,7 @@ class MainActivity : BaseActivity() {
         workTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_red, theme), Tag.TAG_WORK, 0) }
         nullTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_empty, theme), Tag.TAG_NULL, 0) }
         tags = listOf(eBookTag, travelTag, personalTag, lifeTag, workTag, nullTag)
+        tagsBinding = PopWindowTagBinding.inflate(LayoutInflater.from(this))
         tagsBinding.popWindowTagHead.popWindowTagAll.tag = allTag
         tagsBinding.popWindowTagHead.popWindowTagStar.tag = starTag
         tagsBinding.popWindowTagHead.popWindowTagAll.root.setOnClickListener {
@@ -171,19 +172,12 @@ class MainActivity : BaseActivity() {
             mainViewModel.sumNum(starTag.count)
         }
         tagsBinding.popWindowTagHead.popWindowTagStar.recycleItemTagLine.visibility = View.GONE
-    }
-
-    private fun showTags() {
-        val adapter: TagRecyclerViewAdapter = get{ parametersOf(mainViewModel) }
-        tagsBinding.popWindowTagRv.adapter = adapter
-        adapter.submitList(tags)
         popTag = PopupWindow(
             tagsBinding.root,
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply {
             isFocusable = true
             isOutsideTouchable = true
-            showAsDropDown(binding.activityMainIncludeToolbar.root)
             setOnDismissListener {
                 if (isRotate) {
                     binding.activityMainIncludeToolbar.toolbarIvDown.startAnimation(backRotateAnim)
@@ -191,6 +185,13 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+        tagsAdapter = get{ parametersOf(mainViewModel) }
+        tagsBinding.popWindowTagRv.adapter = tagsAdapter
+        tagsAdapter.submitList(tags)
+    }
+
+    private fun showTags() {
+        popTag.showAsDropDown(binding.activityMainIncludeToolbar.root)
     }
 
 

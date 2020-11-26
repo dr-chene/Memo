@@ -9,21 +9,25 @@
         <variable
             name="note"
             type="com.example.memo.model.bean.Note" />
+
+        <variable
+            name="tags"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:background="#FAFAFA">
+        android:background="#FAFAFA"
+        android:fitsSystemWindows="true">
 
         <ImageView
             android:id="@+id/activity_note_edit_iv_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_back_arrow"
             android:layout_marginStart="25dp"
             android:layout_marginTop="25dp"
+            android:src="@drawable/ic_back_arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,9 +53,9 @@
             android:id="@+id/activity_note_edit_iv_save"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_ok"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="25dp"
+            android:src="@drawable/ic_ok"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,15 +63,15 @@
             android:id="@+id/activity_note_edit_et_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="15dp"
+            android:layout_marginEnd="25dp"
             android:background="#FAFAFA"
             android:hint="@string/activity_note_edit_title_hint"
             android:maxLength="45"
             android:text="@={note.title}"
             android:textColor="@color/black"
             android:textSize="28sp"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
             app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_back" />
 
         <ImageView
@@ -77,23 +81,26 @@
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_tag_empty"
             app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title" />
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title"
+            android:onClick="@{tags}"/>
 
         <TextView
             android:id="@+id/activity_note_edit_tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@={note.tag}"
+            android:text="@={note.tag, default=未分类}"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_tag"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_tag" />
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_tag"
+            android:onClick="@{tags}"/>
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_down_grey"
             app:layout_constraintStart_toEndOf="@id/activity_note_edit_tv_tag"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag"
+            android:onClick="@{tags}"/>
 
         <TextView
             android:id="@+id/activity_note_edit_tv_date"
@@ -119,34 +126,34 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="15dp"
+            android:autoLink="web"
             android:background="#FAFAFA"
             android:gravity="top|start"
+            android:scrollbars="vertical"
             android:text="@={note.content}"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:autoLink="web"
-            android:scrollbars="vertical"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_tag"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
+            app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintEnd_toEndOf="@id/activity_note_edit_et_title"
-            app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tab_bg_view"/>
+            app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_tag" />
 
         <View
             android:id="@+id/activity_note_edit_tab_bg_view"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#80EEEEEE"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageView
             android:id="@+id/activity_note_edit_iv_text"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_text"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tv_tab_text"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_img"
+            app:layout_constraintStart_toStartOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -156,20 +163,20 @@
             android:text="@string/activity_note_edit_tab_text"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_text"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_iv_text"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintEnd_toEndOf="@id/activity_note_edit_iv_text"
-            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view" />
+            app:layout_constraintStart_toStartOf="@id/activity_note_edit_iv_text"
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_text" />
 
         <ImageView
             android:id="@+id/activity_note_edit_iv_img"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_picture"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
-            app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_text"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tv_tab_img"
             app:layout_constraintEnd_toStartOf="@id/activity_note_edit_iv_star"
+            app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_text"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -179,20 +186,20 @@
             android:text="@string/activity_note_edit_tab_img"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_img"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_iv_img"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintEnd_toEndOf="@id/activity_note_edit_iv_img"
-            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"/>
+            app:layout_constraintStart_toStartOf="@id/activity_note_edit_iv_img"
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_img" />
 
         <ImageView
             android:id="@+id/activity_note_edit_iv_star"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_favorite"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
-            app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_img"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tv_tab_star"
             app:layout_constraintEnd_toEndOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_img"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
@@ -202,16 +209,16 @@
             android:text="@string/activity_note_edit_star"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_star"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_iv_star"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
             app:layout_constraintEnd_toEndOf="@id/activity_note_edit_iv_star"
-            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"/>
+            app:layout_constraintStart_toStartOf="@id/activity_note_edit_iv_star"
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_star" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/activity_note_edit_select_pop_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

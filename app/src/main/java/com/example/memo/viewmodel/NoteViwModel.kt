@@ -13,7 +13,7 @@ class NoteViwModel internal constructor(
 
     fun getNotes() = noteRepository.getAllNotes()
 
-    fun getNotesByTag(tag: String) = noteRepository.getNotesByTag(tag)
+    fun getNotesByTag(tag: String) = if (tag == "收藏") getStarNote() else noteRepository.getNotesByTag(tag)
 
     fun getNoteByTime(time: Long) = noteRepository.getNoteByTime(time)
 

@@ -10,4 +10,5 @@
     <string name="activity_note_edit_title_hint">标题</string>
     <string name="pop_text_edit_tv_title">文本编辑</string>
     <string name="pop_window_tv_note_tag">笔记分类</string>
+    <string name="note_null">没有笔记</string>
 </resources>

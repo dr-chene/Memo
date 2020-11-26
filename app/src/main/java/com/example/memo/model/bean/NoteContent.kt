@@ -2,33 +2,29 @@ package com.example.memo.model.bean
 
 import android.text.style.*
 import android.util.Log
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 
 /**
 Created by chene on @date 20-11-23 下午4:59
  **/
-data class NoteContent(
-    val content: String,
+data class NoteStyles(
     val styles: MutableMap<Location, List<String>>
 )
 
-fun String.generateNoteContent(): NoteContent = GsonBuilder().enableComplexMapKeySerialization().create().fromJson(this, NoteContent::class.java)
+fun String.toNoteStyles(): NoteStyles = GsonBuilder().enableComplexMapKeySerialization().create().fromJson(this, NoteStyles::class.java)
 
-fun NoteContent.generateString(): String {
+fun NoteStyles.generateString(): String {
     val str = GsonBuilder().enableComplexMapKeySerialization().create().toJson(this)
     Log.d("TAG_10", str)
     return str
 }
 
-fun MutableMap<Location, List<String>>.generateStyles(): MutableMap<Location, List<CharacterStyle>> {
+fun MutableMap<Location, List<String>>.toStyles(): MutableMap<Location, List<CharacterStyle>> {
     val map = mutableMapOf<Location, List<CharacterStyle>>()
     this.keys.forEach {
         this[it]?.let { list ->
             map[it] = list.map { s ->
-                s.generateStyle()
+                s.toStyle()
             }
         }
     }
@@ -37,7 +33,7 @@ fun MutableMap<Location, List<String>>.generateStyles(): MutableMap<Location, Li
     }
 }
 
-fun String.generateStyle(): CharacterStyle {
+fun String.toStyle(): CharacterStyle {
     val param = this.split(" ")
     return if (param.size < 2) {
         UnderlineSpan()

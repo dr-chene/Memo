@@ -15,6 +15,7 @@ import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 /**
 Created by chene on @date 20-11-19 下午2:49
+ resume rv not show the first
  **/
 class NoteFragment : Fragment() {
 
@@ -48,10 +49,21 @@ class NoteFragment : Fragment() {
     }
 
     private fun showNoteByTag(tag: String) {
-        Log.d("TAG_08", "showNoteByTag: show")
-        val notes = if (tag == "全部笔记") noteViewModel.getNotes()
-            else noteViewModel.getNotesByTag(tag)
-        notes.observe(viewLifecycleOwner){
+        (if (tag == "全部笔记") noteViewModel.getNotes() else noteViewModel.getNotesByTag(tag)).observe(viewLifecycleOwner){
+            Log.d("TAG_18", "subscribe s")
+            if (it.isEmpty()) {
+                binding.fragmentNoteIvSearch.visibility = View.INVISIBLE
+                binding.fragmentNoteEtSearch.visibility = View.INVISIBLE
+                binding.fragmentNoteIvNoteNull.visibility = View.VISIBLE
+                binding.fragmentNoteTvNoteNull.visibility = View.VISIBLE
+                binding.fragmentNoteRv.visibility = View.INVISIBLE
+            } else {
+                binding.fragmentNoteIvSearch.visibility = View.VISIBLE
+                binding.fragmentNoteEtSearch.visibility = View.VISIBLE
+                binding.fragmentNoteIvNoteNull.visibility = View.INVISIBLE
+                binding.fragmentNoteTvNoteNull.visibility = View.INVISIBLE
+                binding.fragmentNoteRv.visibility = View.VISIBLE
+            }
             adapter.submitList(it)
         }
     }

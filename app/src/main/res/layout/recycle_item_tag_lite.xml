@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        <variable
+            name="tag"
+            type="com.example.memo.model.bean.TagLite" />
+    </data>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView
+            android:id="@+id/recycle_item_tag_lite_iv_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@{tag.drawable}"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{tag.tag, default=未分类}"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginStart="15dp"
+            app:layout_constraintTop_toTopOf="@id/recycle_item_tag_lite_iv_icon"
+            app:layout_constraintBottom_toBottomOf="@id/recycle_item_tag_lite_iv_icon"
+            app:layout_constraintStart_toEndOf="@id/recycle_item_tag_lite_iv_icon"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:background="@color/line_bg"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="@id/recycle_item_tag_lite_iv_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycle_item_tag_lite_iv_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -13,6 +13,7 @@ data class Note (
     val createTime: Long,
     var title: String,
     var content: String,
+    var styles: String,
     var changeTime: Long,
     var img: Boolean,
     var star: Boolean,

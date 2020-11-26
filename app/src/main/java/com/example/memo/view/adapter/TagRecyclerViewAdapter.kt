@@ -13,7 +13,7 @@ import com.example.memo.viewmodel.MainActivityViewModel
 /**
 Created by chene on @date 20-11-22 下午1:35
  **/
-class TagRecyclerViewAdapter(val viewModel: MainActivityViewModel): ListAdapter<Tag, RecyclerView.ViewHolder>(TagDiffCallBack()) {
+class TagRecyclerViewAdapter(private val viewModel: MainActivityViewModel): ListAdapter<Tag, RecyclerView.ViewHolder>(TagDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return TagViewHolder(

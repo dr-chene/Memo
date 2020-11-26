@@ -10,6 +10,9 @@ import androidx.lifecycle.MutableLiveData
 import com.example.memo.ext.pop
 import com.example.memo.ext.push
 import com.example.memo.model.bean.Location
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
 import kotlin.collections.set
@@ -38,29 +41,41 @@ class NoteEditHelper(
         _isUndo.postValue(r)
     }
 
-    fun write(s: Editable, loc: Location, styles: List<CharacterStyle>, isLoad: Boolean) {
-        if (!isLoad) {
-            operation[loc] = styles
-            Log.d("TAG_12", "write: ${operation[loc]?.map { it.autoToString() }.toString()}")
-            val count = loc.end - loc.start
-            operation.keys.forEach {
-                if (loc != it) {
-                    if (loc.start <= it.start) {
-                        it.start += count
-                        it.end += count
-                    } else if (loc.start < it.end) {
-                        it.end += count
+    fun write(s: Editable, loc: Location, styles: List<CharacterStyle>, isLoad: Boolean, before: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            synchronized(styles){
+                val count = loc.end - loc.start
+                if (count > 0) {
+                    if (!isLoad) {
+                        operation[loc] = styles
+                        Log.d(
+                            "TAG_12",
+                            "write: ${operation[loc]?.map { it.autoToString() }.toString()}"
+                        )
+                        operation.keys.forEach {
+                            if (loc != it) {
+                                if (loc.start <= it.start) {
+                                    it.start += count
+                                    it.end += count
+                                } else if (loc.start < it.end) {
+                                    it.end += count
+                                }
+                            }
+                        }
+                        undoCache.push(loc)
+                        setUndoEdit(true)
                     }
+                    operation.toSortedMap { l1, l2 ->
+                        l1.start - l2.start
+                    }
+                    Log.d("TAG_12", "write operation size: ${operation.size}")
+                    load(s)
+                } else {
+                    delete(loc.start - before, loc.start)
+                    TODO("resume delete operation")
                 }
             }
-            undoCache.push(loc)
-            setUndoEdit(true)
         }
-        operation.toSortedMap { l1, l2 ->
-            l1.start - l2.start
-        }
-        Log.d("TAG_12", "write operation size: ${operation.size}")
-        load(s)
     }
 
     fun redo(s: Editable) = synchronized(s) {
@@ -68,7 +83,7 @@ class NoteEditHelper(
             undoCache.push(it)
             setUndoEdit(true)
             s.insert(it.start, redoCache.redoStr.pop())
-            redoCache.redoSpans.pop()?.forEach { style ->
+            redoCache.redoStyles.pop()?.forEach { style ->
                 s.setSpan(style, it.start, it.end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             if (redoCache.array.size == 0) {
@@ -100,6 +115,17 @@ class NoteEditHelper(
         }
     }
 
+    fun clear(){
+        redoCache.apply {
+            array.clear()
+            redoStyles.clear()
+            redoStr.clear()
+        }
+        setRedoEdit(false)
+        undoCache.array.clear()
+        setUndoEdit(false)
+    }
+
     private fun load(s: Editable) {
         var i = 0
         Log.d("TAG_15", "load: ${operation.size}")
@@ -109,6 +135,25 @@ class NoteEditHelper(
                 Log.d("TAG_14", "loading $i")
                 s.setSpan(v, k.start, k.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
+        }
+    }
+
+    private fun delete(dStart: Int, dEnd: Int){
+        operation.keys.forEach {
+            if (it.end >= dEnd){
+                it.end -= dEnd - dStart
+                if (it.start > dStart){
+                    it.start = dEnd
+                }
+            } else if (it.end > dStart){
+                it.end = dStart
+            }
+        }
+        val delete = operation.keys.filter {
+            it.start < 0 || it.end < 0
+        }
+        delete.forEach {
+            operation.remove(it)
         }
     }
 
@@ -127,12 +172,12 @@ class NoteEditHelper(
     class RedoCache(
         private val cap: Int
     ) : Cache(cap) {
-        val redoSpans: MutableList<List<CharacterStyle>> = mutableListOf()
+        val redoStyles: MutableList<List<CharacterStyle>> = mutableListOf()
         val redoStr: MutableList<String> = mutableListOf()
 
         fun push(v: Location, spans: List<CharacterStyle>, str: String) {
             array.push(v, cap)
-            redoSpans.push(spans, cap)
+            redoStyles.push(spans, cap)
             redoStr.push(str, cap)
         }
     }
