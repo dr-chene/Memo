@@ -65,8 +65,23 @@ class NoteFragment : Fragment() {
             }
         }
         mainViewModel.deleteMode.observe(viewLifecycleOwner) {
+            searchBarAdapt(it)
             adapter.mainViewModel = mainViewModel
             adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun searchBarAdapt(isDelete: Boolean) {
+        binding.apply {
+            if (isDelete) {
+                fragmentNoteEtSearch.alpha = 0.5f
+                fragmentNoteEtSearch.isCursorVisible = false
+                fragmentNoteIvSearch.alpha = 0.5f
+            } else {
+                fragmentNoteEtSearch.alpha = 1f
+                fragmentNoteEtSearch.isCursorVisible = true
+                fragmentNoteIvSearch.alpha = 1f
+            }
         }
     }
 

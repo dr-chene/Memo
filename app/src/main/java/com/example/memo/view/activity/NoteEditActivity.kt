@@ -32,6 +32,7 @@ import com.example.memo.viewmodel.TextEditSelectViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -408,6 +409,7 @@ class NoteEditActivity : BaseActivity() {
                 super.onBackPressed()
             }
             setNegativeButton("不保存") { _, _ ->
+                Toast.makeText(get(), "更改未保存", Toast.LENGTH_SHORT).show()
                 super.onBackPressed()
             }
         }.show()
@@ -415,14 +417,14 @@ class NoteEditActivity : BaseActivity() {
 
     private fun save() {
         Log.d("TAG_17", "save: ${preNote == curNote}")
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             val m = mutableMapOf<Location, List<String>>()
             Log.d("TAG_15", "${noteEditHelper?.operation}")
             noteEditHelper?.operation?.let {
                 it.keys.forEach { l ->
                     it[l]?.let { list ->
-                        m[l] = list.map {
-                            it.autoToString()
+                        m[l] = list.map { style ->
+                            style.autoToString()
                         }
                     }
                 }
@@ -433,6 +435,7 @@ class NoteEditActivity : BaseActivity() {
             Log.d("TAG_15", "save: ${curNote.content}")
             noteViewModel.insertNote(curNote)
             preNote = curNote.copy()
+            Toast.makeText(get(), "保存成功", Toast.LENGTH_SHORT).show()
             Log.d("TAG_15", "after saving: ${curNote.content}")
         }
     }

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import com.example.memo.App
@@ -142,13 +143,13 @@ class MainActivity : BaseActivity() {
             if (isDelete) {
                 Log.d("TAG_21", "subscribe: delete set change, size = ${it.size}")
                 deleteCount = it.size
-                deleteSelectTitle(deleteCount)
                 deleteTabAdapt(it)
             }
         }
     }
 
-    private fun deleteTabAdapt(set: Set<Long>){
+    private fun deleteTabAdapt(set: Set<Long>) {
+        deleteSelectTitle(deleteCount)
         if (set.isNotEmpty()) {
             binding.apply {
                 activityMainTabTvNote.setTextColor(Color.BLACK)
@@ -223,7 +224,12 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            R.id.action_delete -> mainViewModel.enterDeleteMode()
+            R.id.action_delete -> {
+                mainViewModel.title.value?.let {
+                    if (itemCount(it) > 0) mainViewModel.enterDeleteMode()
+                    else Toast.makeText(get(), "无可删除的对象", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
         return true
     }
@@ -351,7 +357,9 @@ class MainActivity : BaseActivity() {
                 delete()
                 mainViewModel.exitDeleteMode()
             }
-            setNegativeButton("取消", null)
+            setNegativeButton("取消") { _, _ ->
+                Toast.makeText(get(), "操作取消", Toast.LENGTH_SHORT).show()
+            }
         }.show().apply {
             getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
         }
@@ -361,6 +369,7 @@ class MainActivity : BaseActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             noteViewModel.deleteNotesByTime(mainViewModel.deleteSet)
             mainViewModel.deleteSet.clear()
+            Toast.makeText(get(), "删除成功", Toast.LENGTH_SHORT).show()
         }
     }
 
