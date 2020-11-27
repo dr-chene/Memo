@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.rotationMatrix
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +23,6 @@ import com.example.memo.BaseActivity
 import com.example.memo.R
 import com.example.memo.databinding.ActivityNoteEditBinding
 import com.example.memo.databinding.PopWindowTagLiteBinding
-import com.example.memo.databinding.RecycleItemTagLiteBinding
 import com.example.memo.model.bean.*
 import com.example.memo.view.adapter.TagLiteClick
 import com.example.memo.view.adapter.TagLiteRecyclerViewAdapter
@@ -37,8 +35,8 @@ import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
- text edit select hide
-* */
+text edit select hide
+ * */
 
 class NoteEditActivity : BaseActivity() {
 
@@ -55,7 +53,7 @@ class NoteEditActivity : BaseActivity() {
     private var mIsUnderline = false
     private var mIsBold = false
     private var mIsItalic = false
-    private lateinit var noteEditHelper: NoteEditHelper
+    private var noteEditHelper: NoteEditHelper? = null
     private var isLoad: Boolean = false
     private val styles = mutableListOf<CharacterStyle>()
     private lateinit var curNote: Note
@@ -104,14 +102,14 @@ class NoteEditActivity : BaseActivity() {
                 curNote.title = curNote.content.trim()
                 binding.activityNoteEditEtTitle.setText(curNote.title)
             }
-            noteEditHelper.clear()
+            noteEditHelper?.clear()
             save()
         }
         binding.activityNoteEditIvRedo.setOnClickListener {
-            noteEditHelper.redo(binding.activityNoteEditContent.text)
+            noteEditHelper?.redo(binding.activityNoteEditContent.text)
         }
         binding.activityNoteEditIvUndo.setOnClickListener {
-            noteEditHelper.undo(binding.activityNoteEditContent.text)
+            noteEditHelper?.undo(binding.activityNoteEditContent.text)
         }
         binding.activityNoteEditIvImg.setOnClickListener {
             TODO("select img")
@@ -180,7 +178,8 @@ class NoteEditActivity : BaseActivity() {
                     start: Int,
                     count: Int,
                     after: Int
-                ) {}
+                ) {
+                }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     Log.d("TAG_06_1", "onTextChanged: $s $start $before $count")
@@ -204,7 +203,7 @@ class NoteEditActivity : BaseActivity() {
                             if (mIsItalic) add(StyleSpan(Typeface.ITALIC))
                             if (mIsUnderline) add(UnderlineSpan())
                         }
-                        noteEditHelper.write(
+                        noteEditHelper?.write(
                             s,
                             Location(mStart, mEnd),
                             styles,
@@ -219,7 +218,7 @@ class NoteEditActivity : BaseActivity() {
 
         noteViewModel.getNoteByTime(intent.getLongExtra("createTime", System.currentTimeMillis()))
             .observe(this) {
-                if (first){
+                if (first) {
                     first = false
                     curNote = if (it.isNotEmpty()) {
                         it[0].apply {
@@ -228,7 +227,7 @@ class NoteEditActivity : BaseActivity() {
                             Log.d("TAG_08", content)
                             isLoad = true
                             liteTags.forEach { tagLite ->
-                                if (tagLite.tag == tag){
+                                if (tagLite.tag == tag) {
                                     binding.activityNoteEditIvTag.setImageDrawable(tagLite.drawable)
                                 }
                             }
@@ -247,7 +246,7 @@ class NoteEditActivity : BaseActivity() {
                         )
                     }
                     binding.note = curNote
-                    if (curNote.star)binding.activityNoteEditIvStar.callOnClick()
+                    if (curNote.star) binding.activityNoteEditIvStar.callOnClick()
                     preNote = curNote.copy()
                     noteEditHelperSubscribe()
                 }
@@ -256,12 +255,30 @@ class NoteEditActivity : BaseActivity() {
 
     private fun initTags() {
         liteTags = listOf(
-            TagLite(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_orange, theme), Tag.TAG_E_BOOK),
-            TagLite(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_yellow, theme), Tag.TAG_TRAVEL),
-            TagLite(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_blue, theme), Tag.TAG_PERSONAL),
-            TagLite(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_green, theme), Tag.TAG_LIFE),
-            TagLite(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_red, theme), Tag.TAG_WORK),
-            TagLite(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_empty, theme), Tag.TAG_NULL)
+            TagLite(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_orange, theme),
+                Tag.TAG_E_BOOK
+            ),
+            TagLite(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_yellow, theme),
+                Tag.TAG_TRAVEL
+            ),
+            TagLite(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_blue, theme),
+                Tag.TAG_PERSONAL
+            ),
+            TagLite(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_green, theme),
+                Tag.TAG_LIFE
+            ),
+            TagLite(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_red, theme),
+                Tag.TAG_WORK
+            ),
+            TagLite(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_empty, theme),
+                Tag.TAG_NULL
+            )
         )
         tagLitesBinding = PopWindowTagLiteBinding.inflate(LayoutInflater.from(this))
         popTagLites = PopupWindow(
@@ -319,11 +336,16 @@ class NoteEditActivity : BaseActivity() {
                 Log.d("TAG_12", "isUnderLine : $it")
                 mIsUnderline = it
             }
+            align.observe(this@NoteEditActivity) {
+                Log.d("TAG_20", "subscribe: $it")
+                binding.activityNoteEditContent.gravity =
+                    binding.activityNoteEditContent.gravity or it
+            }
         }
     }
 
     private fun noteEditHelperSubscribe() {
-        noteEditHelper.isRedo.observe(this) {
+        noteEditHelper?.isRedo?.observe(this) {
             binding.activityNoteEditIvRedo.apply {
                 if (it) {
                     isSelected = true
@@ -334,7 +356,7 @@ class NoteEditActivity : BaseActivity() {
                 }
             }
         }
-        noteEditHelper.isUndo.observe(this) {
+        noteEditHelper?.isUndo?.observe(this) {
             binding.activityNoteEditIvUndo.apply {
                 if (it) {
                     isSelected = true
@@ -380,10 +402,10 @@ class NoteEditActivity : BaseActivity() {
         Log.d("TAG_17", "save: ${preNote == curNote}")
         CoroutineScope(Dispatchers.IO).launch {
             val m = mutableMapOf<Location, List<String>>()
-            Log.d("TAG_15", "${noteEditHelper.operation}")
-            noteEditHelper.operation.apply {
-                keys.forEach { l ->
-                    get(l)?.let { list ->
+            Log.d("TAG_15", "${noteEditHelper?.operation}")
+            noteEditHelper?.operation?.let {
+                it.keys.forEach { l ->
+                    it[l]?.let { list ->
                         m[l] = list.map {
                             it.autoToString()
                         }
@@ -392,7 +414,7 @@ class NoteEditActivity : BaseActivity() {
             }
             curNote.styles = NoteStyles(m).generateString()
             curNote.changeTime = System.currentTimeMillis()
-            if (curNote.title == "")curNote.title = curNote.content
+            if (curNote.title == "") curNote.title = curNote.content
             Log.d("TAG_15", "save: ${curNote.content}")
             noteViewModel.insertNote(curNote)
             preNote = curNote.copy()

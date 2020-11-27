@@ -13,17 +13,18 @@ class NoteViwModel internal constructor(
 
     fun getNotes() = noteRepository.getAllNotes()
 
-    fun getNotesByTag(tag: String) = if (tag == "收藏") getStarNote() else noteRepository.getNotesByTag(tag)
+    fun getNotesByTag(tag: String) =
+        if (tag == "收藏") getStarNote() else noteRepository.getNotesByTag(tag)
 
     fun getNoteByTime(time: Long) = noteRepository.getNoteByTime(time)
 
     fun getStarNote() = noteRepository.getStarNote(true)
 
-    suspend fun insertNote(note: Note){
+    suspend fun insertNote(note: Note) {
         noteRepository.insertNote(note)
     }
 
-    suspend fun deleteNotes(notes: List<Note>){
+    suspend fun deleteNotes(notes: List<Note>) {
         notes.forEach {
             noteRepository.deleteNote(it)
         }

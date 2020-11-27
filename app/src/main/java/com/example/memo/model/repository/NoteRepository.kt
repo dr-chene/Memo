@@ -5,7 +5,7 @@ import com.example.memo.model.bean.Note
 /**
 Created by chene on @date 20-11-20 下午2:48
  **/
-class NoteRepository (
+class NoteRepository(
     private val noteDao: NoteDao
 ) {
 
@@ -21,7 +21,7 @@ class NoteRepository (
         noteDao.insertNote(note)
     }
 
-    suspend fun deleteNote(note: Note){
+    suspend fun deleteNote(note: Note) {
         noteDao.deleteNoteByCreateTime(note.createTime)
     }
 

@@ -18,7 +18,13 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(mainActivityModule, noteFragmentModule, noteEditActivityModule, appDataBaseModule, classModule)
+            modules(
+                mainActivityModule,
+                noteFragmentModule,
+                noteEditActivityModule,
+                appDataBaseModule,
+                classModule
+            )
         }
     }
 

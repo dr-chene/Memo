@@ -4,14 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.memo.R
 import kotlin.math.min
 
 /**
@@ -54,7 +50,7 @@ class ColorCircleView @JvmOverloads constructor(
         }
     }
 
-    fun selected(){
+    fun selected() {
         radius = edge / 1.5f
         paint.apply {
             Log.d("TAG_05", "selected: $radius")
@@ -64,7 +60,7 @@ class ColorCircleView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun unSelected(){
+    fun unSelected() {
         radius = 0.7f * edge
         paint.apply {
             strokeWidth = 0f

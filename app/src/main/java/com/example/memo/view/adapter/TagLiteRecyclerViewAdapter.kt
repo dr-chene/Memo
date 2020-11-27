@@ -11,7 +11,8 @@ import com.example.memo.model.bean.TagLite
 /**
 Created by chene on @date 20-11-26 下午7:51
  **/
-class TagLiteRecyclerViewAdapter(private val click: TagLiteClick): ListAdapter<TagLite, RecyclerView.ViewHolder>(TagLiteDiffCallBack()) {
+class TagLiteRecyclerViewAdapter(private val click: TagLiteClick) :
+    ListAdapter<TagLite, RecyclerView.ViewHolder>(TagLiteDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return TagLiteViewHolder(
@@ -27,11 +28,11 @@ class TagLiteRecyclerViewAdapter(private val click: TagLiteClick): ListAdapter<T
 
     class TagLiteViewHolder(
         private val binding: RecycleItemTagLiteBinding
-    ): RecyclerView.ViewHolder(binding.root){
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(tag: TagLite, click: TagLiteClick){
+        fun bind(tag: TagLite, click: TagLiteClick) {
             binding.tag = tag
-            binding.root.setOnClickListener{
+            binding.root.setOnClickListener {
                 click.onClick(tag)
             }
             binding.executePendingBindings()
@@ -39,11 +40,11 @@ class TagLiteRecyclerViewAdapter(private val click: TagLiteClick): ListAdapter<T
     }
 }
 
-interface TagLiteClick{
+interface TagLiteClick {
     fun onClick(tag: TagLite)
 }
 
-private class TagLiteDiffCallBack: DiffUtil.ItemCallback<TagLite>(){
+private class TagLiteDiffCallBack : DiffUtil.ItemCallback<TagLite>() {
     override fun areItemsTheSame(oldItem: TagLite, newItem: TagLite): Boolean {
         return oldItem.tag == newItem.tag
     }

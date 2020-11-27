@@ -2,10 +2,8 @@ package com.example.memo.di
 
 
 import android.graphics.drawable.Drawable
-import android.text.style.*
-import androidx.lifecycle.ViewModelStoreOwner
+import android.view.View
 import com.example.memo.AppDataBase
-import com.example.memo.model.bean.Location
 import com.example.memo.model.bean.Tag
 import com.example.memo.model.repository.NoteRepository
 import com.example.memo.view.activity.NoteEditHelper
@@ -44,7 +42,7 @@ val mainActivityModule = module {
 }
 
 val noteFragmentModule = module {
-    single { NoteRecyclerViewAdapter() }
+    single { (longClick: View.OnLongClickListener) -> NoteRecyclerViewAdapter(longClick, get()) }
 }
 
 val noteEditActivityModule = module {
@@ -58,5 +56,5 @@ val classModule = module {
 
     factory { (cap: Int) -> NoteEditHelper.Cache(cap) }
 
-    factory { (cap: Int) ->NoteEditHelper.RedoCache(cap) }
+    factory { (cap: Int) -> NoteEditHelper.RedoCache(cap) }
 }

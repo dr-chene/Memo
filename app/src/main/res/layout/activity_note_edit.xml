@@ -79,28 +79,28 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{tags}"
             android:src="@drawable/ic_tag_empty"
             app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title"
-            android:onClick="@{tags}"/>
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title" />
 
         <TextView
             android:id="@+id/activity_note_edit_tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{tags}"
             android:text="@={note.tag, default=未分类}"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_tag"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_tag"
-            android:onClick="@{tags}"/>
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_tag" />
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:onClick="@{tags}"
             android:src="@drawable/ic_down_grey"
             app:layout_constraintStart_toEndOf="@id/activity_note_edit_tv_tag"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag"
-            android:onClick="@{tags}"/>
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
 
         <TextView
             android:id="@+id/activity_note_edit_tv_date"
@@ -128,9 +128,9 @@
             android:layout_marginTop="15dp"
             android:autoLink="web"
             android:background="#FAFAFA"
-            android:gravity="top|start"
+            android:gravity="top"
             android:scrollbars="vertical"
-            android:text="@={note.content}"
+            android:text="@={note.content, default=imcontent}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tab_bg_view"

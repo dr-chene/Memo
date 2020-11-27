@@ -11,23 +11,23 @@
 
             <include
                 android:id="@+id/fragment_do_today"
-                layout="@layout/include_fragment_do"/>
+                layout="@layout/include_fragment_do" />
 
             <include
                 android:id="@+id/fragment_do_tomorrow"
-                layout="@layout/include_fragment_do"/>
+                layout="@layout/include_fragment_do" />
 
             <include
                 android:id="@+id/fragment_do_later"
-                layout="@layout/include_fragment_do"/>
+                layout="@layout/include_fragment_do" />
 
             <include
                 android:id="@+id/fragment_do_no_date"
-                layout="@layout/include_fragment_do"/>
+                layout="@layout/include_fragment_do" />
 
             <include
                 android:id="@+id/fragment_do_done"
-                layout="@layout/include_fragment_do"/>
+                layout="@layout/include_fragment_do" />
         </FrameLayout>
     </ScrollView>
 </layout>

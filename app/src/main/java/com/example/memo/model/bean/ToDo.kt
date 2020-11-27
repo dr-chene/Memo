@@ -8,7 +8,7 @@ import com.example.memo.ext.toDoDate
 Created by chene on @date 20-11-20 上午8:42
  **/
 @Entity(tableName = "todo")
-data class ToDo (
+data class ToDo(
     @PrimaryKey
     val createTime: Long,
     val content: String,
@@ -21,11 +21,12 @@ data class ToDo (
 ) {
 
     var date: String = if (isDone) DATE_DONE else toDoTime.toDoDate()
-    fun done(){
+    fun done() {
         isDone = true
         date = DATE_DONE
     }
-    fun cancelDone(){
+
+    fun cancelDone() {
         isDone = false
         date = toDoTime.toDoDate()
     }

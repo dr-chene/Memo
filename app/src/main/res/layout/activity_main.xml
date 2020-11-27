@@ -65,46 +65,46 @@
             android:id="@+id/activity_main_tab_iv_note"
             android:layout_width="25dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_tab_note"
-            app:layout_constraintTop_toTopOf="@id/activity_main_tab_bg_view"
-            app:layout_constraintStart_toStartOf="@id/activity_main_tab_bg_view"
+            android:src="@{viewmodel.deleteMode? @drawable/ic_delete : @drawable/ic_tab_note}"
             app:layout_constraintBottom_toTopOf="@id/activity_main_tab_tv_note"
             app:layout_constraintEnd_toStartOf="@id/activity_main_tab_iv_todo"
-            app:layout_constraintVertical_chainStyle="packed"/>
+            app:layout_constraintStart_toStartOf="@id/activity_main_tab_bg_view"
+            app:layout_constraintTop_toTopOf="@id/activity_main_tab_bg_view"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/activity_main_tab_tv_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/activity_main_tab_note"
+            android:text="@{viewmodel.deleteMode ? @string/activity_main_tab_delete : @string/activity_main_tab_note}"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@id/activity_main_tab_iv_note"
+            app:layout_constraintBottom_toBottomOf="@id/activity_main_tab_bg_view"
             app:layout_constraintEnd_toEndOf="@id/activity_main_tab_iv_note"
-            app:layout_constraintTop_toBottomOf="@id/activity_main_tab_iv_note"
-            app:layout_constraintBottom_toBottomOf="@id/activity_main_tab_bg_view"/>
+            app:layout_constraintStart_toStartOf="@id/activity_main_tab_iv_note"
+            app:layout_constraintTop_toBottomOf="@id/activity_main_tab_iv_note" />
 
         <ImageView
             android:id="@+id/activity_main_tab_iv_todo"
             android:layout_width="25dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_tab_todo"
-            app:layout_constraintTop_toTopOf="@id/activity_main_tab_bg_view"
-            app:layout_constraintStart_toEndOf="@id/activity_main_tab_iv_note"
-            app:layout_constraintEnd_toEndOf="@id/activity_main_tab_bg_view"
+            android:src="@{viewmodel.deleteMode? @drawable/ic_select_all : @drawable/ic_tab_todo}"
             app:layout_constraintBottom_toTopOf="@id/activity_main_tab_tv_todo"
-            app:layout_constraintVertical_chainStyle="packed"/>
+            app:layout_constraintEnd_toEndOf="@id/activity_main_tab_bg_view"
+            app:layout_constraintStart_toEndOf="@id/activity_main_tab_iv_note"
+            app:layout_constraintTop_toTopOf="@id/activity_main_tab_bg_view"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/activity_main_tab_tv_todo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/activity_main_tab_todo"
+            android:text="@{viewmodel.deleteMode? @string/activity_main_tab_select_all : @string/activity_main_tab_todo}"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@id/activity_main_tab_iv_todo"
+            app:layout_constraintBottom_toBottomOf="@id/activity_main_tab_bg_view"
             app:layout_constraintEnd_toEndOf="@id/activity_main_tab_iv_todo"
-            app:layout_constraintTop_toBottomOf="@id/activity_main_tab_iv_todo"
-            app:layout_constraintBottom_toBottomOf="@id/activity_main_tab_bg_view"/>
+            app:layout_constraintStart_toStartOf="@id/activity_main_tab_iv_todo"
+            app:layout_constraintTop_toBottomOf="@id/activity_main_tab_iv_todo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

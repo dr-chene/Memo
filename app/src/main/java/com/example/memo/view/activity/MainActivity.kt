@@ -1,12 +1,12 @@
 package com.example.memo.view.activity
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import com.example.memo.App
@@ -36,7 +36,7 @@ class MainActivity : BaseActivity() {
     private val todoFragment: ToDoFragment by inject()
     private lateinit var allTag: Tag
     private lateinit var starTag: Tag
-    private lateinit var eBookTag :Tag
+    private lateinit var eBookTag: Tag
     private lateinit var travelTag: Tag
     private lateinit var personalTag: Tag
     private lateinit var lifeTag: Tag
@@ -45,6 +45,8 @@ class MainActivity : BaseActivity() {
     private lateinit var tags: List<Tag>
     private lateinit var popTag: PopupWindow
     private var isRotate = false
+    private var isDelete = false
+    private var deleteCount = 0
     private lateinit var tagsAdapter: TagRecyclerViewAdapter
     private val toRotateAnim = AnimationUtils.loadAnimation(App.context, R.anim.rotate_to).apply {
         fillAfter = true
@@ -82,37 +84,73 @@ class MainActivity : BaseActivity() {
             isRotate = !isRotate
         }
         binding.activityMainTabIvNote.setOnClickListener {
-            tabSelect("笔记")
+            tabSelect(binding.activityMainTabTvNote.text.toString())
         }
         binding.activityMainTabIvTodo.setOnClickListener {
-            tabSelect("待办")
+            tabSelect(binding.activityMainTabTvTodo.text.toString())
+        }
+        binding.activityMainIncludeToolbar.toolbarIvExit.setOnClickListener {
+            mainViewModel.exitDeleteMode()
         }
         initTags()
     }
 
-    private fun subscribe(){
-        noteViewModel.getNotes().observe(this){
+    private fun subscribe() {
+        noteViewModel.getNotes().observe(this) {
             allTag.count = it.size
             tagsBinding.popWindowTagHead.popWindowTagAll.tag = allTag
             mainViewModel.selectTag(allTag.tag)
             mainViewModel.sumNum(allTag.count)
         }
-        noteViewModel.getStarNote().observe(this){
+        noteViewModel.getStarNote().observe(this) {
             starTag.count = it.size
             tagsBinding.popWindowTagHead.popWindowTagStar.tag = starTag
         }
         tags.forEach { tag ->
-            noteViewModel.getNotesByTag(tag.tag).observe(this){
+            noteViewModel.getNotesByTag(tag.tag).observe(this) {
                 tag.count = it.size
                 tagsAdapter.notifyDataSetChanged()
             }
         }
-        mainViewModel.title.observe(this){
+        mainViewModel.title.observe(this) {
             binding.activityMainIncludeToolbar.toolbarTvTitle.text = it
             popTag.dismiss()
         }
-        mainViewModel.subTitle.observe(this){
+        mainViewModel.subTitle.observe(this) {
             binding.activityMainIncludeToolbar.toolbarTvSubtitle.text = it
+        }
+        mainViewModel.deleteMode.observe(this) {
+            isDelete = it
+            invalidateOptionsMenu()
+//            if (it)enterDeleteMode() else exitDeleteMode()
+        }
+        mainViewModel.deleteList.observe(this) {
+            deleteCount = it.size
+            deleteSelectTitle(it.size)
+            if (it.size == 1) {
+                binding.apply {
+                    activityMainTabTvNote.setTextColor(Color.BLACK)
+                    activityMainTabIvNote.isSelected = true
+                    activityMainTabIvNote.isClickable = true
+                }
+            } else if (it.isEmpty()) {
+                binding.apply {
+                    activityMainTabTvNote.setTextColor(Color.parseColor("#bfbfbf"))
+                    activityMainTabIvNote.isSelected = false
+                    activityMainTabIvNote.isClickable = false
+                }
+            }
+            mainViewModel.title.value?.let { tag ->
+                if (it.size == itemCount(tag)) {
+                    binding.activityMainTabTvTodo.setText(R.string.activity_main_tab_cancel_select_all)
+                    binding.activityMainTabTvTodo.setTextColor(Color.parseColor("#2962FF"))
+                    binding.activityMainTabIvTodo.isSelected = true
+                } else {
+                    binding.activityMainTabTvTodo.setText(R.string.activity_main_tab_select_all)
+                    binding.activityMainTabTvTodo.setTextColor(Color.BLACK)
+                    binding.activityMainTabIvTodo.isSelected = false
+                }
+            }
         }
     }
 
@@ -134,31 +172,112 @@ class MainActivity : BaseActivity() {
                 supportFragmentManager.navTo(todoFragment)
                 mainViewModel.selectTab(TAB_DO)
             }
+            resources.getString(R.string.activity_main_tab_delete) -> {
+                deleteConfirm()
+            }
+            resources.getString(R.string.activity_main_tab_select_all) -> {
+                binding.apply {
+                    activityMainTabIvTodo.isSelected = true
+                    activityMainTabTvTodo.setText(R.string.activity_main_tab_cancel_select_all)
+                    activityMainTabTvTodo.setTextColor(Color.parseColor("#2962FF"))
+                    deleteSelectAll(true)
+                }
+            }
+            resources.getString(R.string.activity_main_tab_cancel_select_all) -> {
+                binding.apply {
+                    activityMainTabIvTodo.isSelected = false
+                    activityMainTabTvTodo.setText(R.string.activity_main_tab_select_all)
+                    activityMainTabTvTodo.setTextColor(Color.BLACK)
+                    deleteSelectAll(false)
+                }
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_activity_main, menu)
+        if (!isDelete) menuInflater.inflate(R.menu.menu_activity_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-
+            R.id.action_delete -> mainViewModel.enterDeleteMode()
         }
         return true
     }
 
     private fun initTags() {
-        allTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_note_grey, theme), "全部笔记", 0) }
-        starTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_star_grey, theme), "收藏",  0) }
-        eBookTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_orange, theme), Tag.TAG_E_BOOK, 0) }
-        travelTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_yellow, theme), Tag.TAG_TRAVEL, 0) }
-        personalTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_blue, theme), Tag.TAG_PERSONAL, 0) }
-        lifeTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_green, theme), Tag.TAG_LIFE, 0) }
-        workTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_red, theme), Tag.TAG_WORK, 0) }
-        nullTag = get { parametersOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_empty, theme), Tag.TAG_NULL, 0) }
+        allTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_note_grey,
+                    theme
+                ), "全部笔记", 0
+            )
+        }
+        starTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_star_grey,
+                    theme
+                ), "收藏", 0
+            )
+        }
+        eBookTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_tag_orange,
+                    theme
+                ), Tag.TAG_E_BOOK, 0
+            )
+        }
+        travelTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_tag_yellow,
+                    theme
+                ), Tag.TAG_TRAVEL, 0
+            )
+        }
+        personalTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_tag_blue,
+                    theme
+                ), Tag.TAG_PERSONAL, 0
+            )
+        }
+        lifeTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_tag_green,
+                    theme
+                ), Tag.TAG_LIFE, 0
+            )
+        }
+        workTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_tag_red, theme),
+                Tag.TAG_WORK,
+                0
+            )
+        }
+        nullTag = get {
+            parametersOf(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_tag_empty,
+                    theme
+                ), Tag.TAG_NULL, 0
+            )
+        }
         tags = listOf(eBookTag, travelTag, personalTag, lifeTag, workTag, nullTag)
         tagsBinding = PopWindowTagBinding.inflate(LayoutInflater.from(this))
         tagsBinding.popWindowTagHead.popWindowTagAll.tag = allTag
@@ -185,7 +304,7 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
-        tagsAdapter = get{ parametersOf(mainViewModel) }
+        tagsAdapter = get { parametersOf(mainViewModel) }
         tagsBinding.popWindowTagRv.adapter = tagsAdapter
         tagsAdapter.submitList(tags)
     }
@@ -194,6 +313,68 @@ class MainActivity : BaseActivity() {
         popTag.showAsDropDown(binding.activityMainIncludeToolbar.root)
     }
 
+    private fun enterDeleteMode() {
+
+        TODO("Not yet implemented")
+    }
+
+    private fun exitDeleteMode() {
+
+        TODO("Not yet implemented")
+    }
+
+    private fun deleteSelectAll(selectAll: Boolean) {
+        mainViewModel.selectAll(selectAll)
+    }
+
+    private fun deleteConfirm() {
+        val s =
+            if (binding.activityMainTabTvTodo.text.toString() == resources.getString(R.string.activity_main_tab_cancel_select_all)) {
+                "是否删除全部笔记？"
+            } else {
+                "是否删除${deleteCount}条笔记？"
+            }
+        AlertDialog.Builder(this).apply {
+            setMessage(s)
+            setPositiveButton("删除") { _, _ ->
+                delete()
+                mainViewModel.exitDeleteMode()
+            }
+            setNegativeButton("取消", null)
+        }.show().apply {
+            getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+        }
+    }
+
+    private fun delete() {
+        mainViewModel.deleteList.value?.let {
+            it.forEach { time ->
+                noteViewModel.getNoteByTime(time)
+            }
+        }
+    }
+
+    private fun deleteSelectTitle(count: Int) {
+        if (count == 0) {
+            binding.activityMainIncludeToolbar.toolbarTvTitle.text = "未选择"
+        } else {
+            val s = "已选择${count}项"
+            binding.activityMainIncludeToolbar.toolbarTvTitle.text = s
+        }
+    }
+
+    private fun itemCount(tag: String): Int {
+        when (tag) {
+            allTag.tag -> return allTag.count
+            starTag.tag -> return starTag.count
+            else -> {
+                tags.forEach {
+                    if (it.tag == tag) return it.count
+                }
+            }
+        }
+        return 0
+    }
 
     companion object {
         const val TAB_NOTE = 0

@@ -41,9 +41,15 @@ class NoteEditHelper(
         _isUndo.postValue(r)
     }
 
-    fun write(s: Editable, loc: Location, styles: List<CharacterStyle>, isLoad: Boolean, before: Int) {
+    fun write(
+        s: Editable,
+        loc: Location,
+        styles: List<CharacterStyle>,
+        isLoad: Boolean,
+        before: Int
+    ) {
         CoroutineScope(Dispatchers.Main).launch {
-            synchronized(styles){
+            synchronized(styles) {
                 val count = loc.end - loc.start
                 if (count > 0) {
                     if (!isLoad) {
@@ -115,7 +121,7 @@ class NoteEditHelper(
         }
     }
 
-    fun clear(){
+    fun clear() {
         redoCache.apply {
             array.clear()
             redoStyles.clear()
@@ -138,14 +144,14 @@ class NoteEditHelper(
         }
     }
 
-    private fun delete(dStart: Int, dEnd: Int){
+    private fun delete(dStart: Int, dEnd: Int) {
         operation.keys.forEach {
-            if (it.end >= dEnd){
+            if (it.end >= dEnd) {
                 it.end -= dEnd - dStart
-                if (it.start > dStart){
+                if (it.start > dStart) {
                     it.start = dEnd
                 }
-            } else if (it.end > dStart){
+            } else if (it.end > dStart) {
                 it.end = dStart
             }
         }

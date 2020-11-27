@@ -11,7 +11,8 @@ data class NoteStyles(
     val styles: MutableMap<Location, List<String>>
 )
 
-fun String.toNoteStyles(): NoteStyles = GsonBuilder().enableComplexMapKeySerialization().create().fromJson(this, NoteStyles::class.java)
+fun String.toNoteStyles(): NoteStyles =
+    GsonBuilder().enableComplexMapKeySerialization().create().fromJson(this, NoteStyles::class.java)
 
 fun NoteStyles.generateString(): String {
     val str = GsonBuilder().enableComplexMapKeySerialization().create().toJson(this)
@@ -28,7 +29,7 @@ fun MutableMap<Location, List<String>>.toStyles(): MutableMap<Location, List<Cha
             }
         }
     }
-    return map.toSortedMap{ k1, k2 ->
+    return map.toSortedMap { k1, k2 ->
         k1.start - k2.start
     }
 }

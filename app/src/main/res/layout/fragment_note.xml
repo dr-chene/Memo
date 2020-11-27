@@ -9,14 +9,14 @@
 
         <ImageView
             android:id="@+id/fragment_note_iv_note_null"
-            android:src="@drawable/ic_note_null"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_note_null"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0.328"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.328" />
 
         <TextView
             android:id="@+id/fragment_note_tv_note_null"
@@ -24,31 +24,31 @@
             android:layout_height="wrap_content"
             android:text="@string/note_null"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/fragment_note_iv_note_null"
+            app:layout_constraintEnd_toEndOf="@id/fragment_note_iv_note_null"
             app:layout_constraintStart_toStartOf="@id/fragment_note_iv_note_null"
-            app:layout_constraintEnd_toEndOf="@id/fragment_note_iv_note_null"/>
+            app:layout_constraintTop_toBottomOf="@id/fragment_note_iv_note_null" />
 
         <EditText
             android:id="@+id/fragment_note_et_search"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
-            android:hint="@string/fragment_note_et_search"
-            android:textColorHint="#515151"
-            android:paddingStart="40dp"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/fragment_note_et_search"
-            android:inputType="text" />
+            android:hint="@string/fragment_note_et_search"
+            android:inputType="text"
+            android:paddingStart="40dp"
+            android:textColorHint="#515151"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/fragment_note_iv_search"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_margin="10dp"
             android:src="@drawable/ic_note_search"
-            app:layout_constraintTop_toTopOf="@id/fragment_note_et_search"
             app:layout_constraintBottom_toBottomOf="@id/fragment_note_et_search"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="10dp" />
+            app:layout_constraintTop_toTopOf="@id/fragment_note_et_search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_note_rv"
@@ -56,9 +56,9 @@
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:spanCount="2"
-            tools:listitem="@layout/recycle_item_note"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_note_et_search"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:spanCount="2"
+            tools:listitem="@layout/recycle_item_note" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

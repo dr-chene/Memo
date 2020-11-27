@@ -8,7 +8,7 @@ import com.example.memo.model.bean.Tag.Companion.TAG_NULL
 Created by chene on @date 20-11-20 上午8:32
  **/
 @Entity(tableName = "note")
-data class Note (
+data class Note(
     @PrimaryKey
     val createTime: Long,
     var title: String,

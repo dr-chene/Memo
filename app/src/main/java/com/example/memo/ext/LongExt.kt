@@ -9,7 +9,7 @@ import kotlin.math.abs
 Created by chene on @date 20-11-20 下午2:02
  **/
 @SuppressLint("SimpleDateFormat")
-fun Long.toNoteDate(): String{
+fun Long.toNoteDate(): String {
     val cur = System.currentTimeMillis()
     return if (abs(this - cur) <= 300000) "刚刚"
     else {
@@ -20,9 +20,9 @@ fun Long.toNoteDate(): String{
 }
 
 @SuppressLint("SimpleDateFormat")
-fun Long.day(): String{
+fun Long.day(): String {
     val cur = System.currentTimeMillis()
-    return when(cur - this){
+    return when (cur - this) {
         in 0..86400000 -> {
             "今天"
         }
@@ -38,16 +38,16 @@ fun Long.day(): String{
 }
 
 @SuppressLint("SimpleDateFormat")
-fun Long.time(): String{
+fun Long.time(): String {
     val date = Date(this)
     val sdFormatter = SimpleDateFormat("HH:mm")
     return sdFormatter.format(date)
 }
 
-fun Long.toDoDate(): String{
+fun Long.toDoDate(): String {
     val cur = System.currentTimeMillis()
-    return when(abs(this - cur)){
-        cur ->{
+    return when (abs(this - cur)) {
+        cur -> {
             "无日期"
         }
         in 0..86400000 -> {

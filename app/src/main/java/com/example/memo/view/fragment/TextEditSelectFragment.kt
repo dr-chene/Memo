@@ -2,7 +2,6 @@ package com.example.memo.view.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import org.koin.android.viewmodel.ext.android.sharedViewModel
 /**
 Created by chene on @date 20-11-21 下午3:16
  **/
-class TextEditSelectFragment: Fragment() {
+class TextEditSelectFragment : Fragment() {
 
     private lateinit var binding: FragmentTextEditSelectBinding
     private val textEditSelectViewModel: TextEditSelectViewModel by sharedViewModel()
@@ -40,8 +39,16 @@ class TextEditSelectFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         binding.apply {
-            listOf(popTextEditIvBlack, popTextEditIvPurple, popTextEditIvCyan, popTextEditIvBlue, popTextEditIvGreen, popTextEditIvYellow, popTextEditIvRed).forEach {
-                if (curSelect !== it){
+            listOf(
+                popTextEditIvBlack,
+                popTextEditIvPurple,
+                popTextEditIvCyan,
+                popTextEditIvBlue,
+                popTextEditIvGreen,
+                popTextEditIvYellow,
+                popTextEditIvRed
+            ).forEach {
+                if (curSelect !== it) {
                     curSelect.unSelected()
                 }
             }
@@ -66,7 +73,7 @@ class TextEditSelectFragment: Fragment() {
             popTextEditIvRed.color = "#f44336"
         }
 
-        binding.popTextEditIvBlack.length.observe(viewLifecycleOwner){
+        binding.popTextEditIvBlack.length.observe(viewLifecycleOwner) {
             binding.popTextEditIvBlack.selected()
             curSelect = binding.popTextEditIvBlack
         }
@@ -106,11 +113,11 @@ class TextEditSelectFragment: Fragment() {
         }
     }
 
-    private fun subscribe(){
+    private fun subscribe() {
         var curSelect = binding.popTextEditIvAlignLeft
-        textEditSelectViewModel.align.observe(viewLifecycleOwner){
+        textEditSelectViewModel.align.observe(viewLifecycleOwner) {
             curSelect.isSelected = false
-            when(it){
+            when (it) {
                 TextView.TEXT_ALIGNMENT_TEXT_START -> {
                     binding.popTextEditIvAlignLeft.isSelected = true
                     curSelect = binding.popTextEditIvAlignLeft
@@ -126,13 +133,13 @@ class TextEditSelectFragment: Fragment() {
             }
         }
         textEditSelectViewModel.apply {
-            isBold.observe(viewLifecycleOwner){
+            isBold.observe(viewLifecycleOwner) {
                 binding.popTextEditIvBold.isSelected = it
             }
-            isItalic.observe(viewLifecycleOwner){
+            isItalic.observe(viewLifecycleOwner) {
                 binding.popTextEditIvItalic.isSelected = it
             }
-            isUnderLine.observe(viewLifecycleOwner){
+            isUnderLine.observe(viewLifecycleOwner) {
                 binding.popTextEditIvUnderline.isSelected = it
             }
         }

@@ -13,7 +13,8 @@ import com.example.memo.viewmodel.MainActivityViewModel
 /**
 Created by chene on @date 20-11-22 下午1:35
  **/
-class TagRecyclerViewAdapter(private val viewModel: MainActivityViewModel): ListAdapter<Tag, RecyclerView.ViewHolder>(TagDiffCallBack()) {
+class TagRecyclerViewAdapter(private val viewModel: MainActivityViewModel) :
+    ListAdapter<Tag, RecyclerView.ViewHolder>(TagDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return TagViewHolder(
@@ -29,9 +30,9 @@ class TagRecyclerViewAdapter(private val viewModel: MainActivityViewModel): List
 
     class TagViewHolder(
         private val binding: RecycleItemTagBinding
-    ): RecyclerView.ViewHolder(binding.root){
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(tag: Tag, viewModel: MainActivityViewModel){
+        fun bind(tag: Tag, viewModel: MainActivityViewModel) {
             binding.tag = tag
             binding.root.setOnClickListener {
                 viewModel.selectTag(tag.tag)
@@ -42,7 +43,7 @@ class TagRecyclerViewAdapter(private val viewModel: MainActivityViewModel): List
         }
     }
 
-    private class TagDiffCallBack: DiffUtil.ItemCallback<Tag>(){
+    private class TagDiffCallBack : DiffUtil.ItemCallback<Tag>() {
         override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {
             return oldItem.tag == newItem.tag
         }
