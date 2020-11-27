@@ -21,8 +21,8 @@ class NoteRepository(
         noteDao.insertNote(note)
     }
 
-    suspend fun deleteNote(note: Note) {
-        noteDao.deleteNoteByCreateTime(note.createTime)
+    suspend fun deleteNoteByTime(time: Long) {
+        noteDao.deleteNoteByCreateTime(time)
     }
 
 }

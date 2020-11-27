@@ -60,11 +60,13 @@ class NoteFragment : Fragment() {
         }
         mainViewModel.selectAll.observe(viewLifecycleOwner) { f ->
             binding.fragmentNoteRv.children.forEach {
+                Log.d("TAG_22", "subscribe: $f")
                 it.findViewById<CheckBox>(R.id.recycle_item_note_delete_box).isChecked = f
-                list.forEach { note ->
-                    if (f) mainViewModel.select(note.createTime) else mainViewModel.unSelect(note.createTime)
-                }
             }
+        }
+        mainViewModel.deleteMode.observe(viewLifecycleOwner) {
+            adapter.mainViewModel = mainViewModel
+            adapter.notifyDataSetChanged()
         }
     }
 

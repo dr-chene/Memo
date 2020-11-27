@@ -52,19 +52,16 @@ class MainActivityViewModel : ViewModel() {
 
     val deleteList: LiveData<Set<Long>>
         get() = _deleteList
-    private val _deleteList = MutableLiveData<Set<Long>>()
-    fun select(createTime: Long) {
-        _deleteList.value?.let {
-            it.toMutableSet().add(createTime)
-            _deleteList.postValue(it)
-        }
+    private val _deleteList = MutableLiveData<Set<Long>>(setOf())
+    fun select(createTime: Long) = synchronized(deleteSet) {
+        deleteSet.add(createTime)
+        _deleteList.postValue(deleteSet)
     }
 
-    fun unSelect(createTime: Long) {
-        _deleteList.value?.let {
-            _deleteList.postValue(it.filter { time ->
-                time == createTime
-            }.toSet())
-        }
+    fun unSelect(createTime: Long) = synchronized(deleteSet) {
+        deleteSet.remove(createTime)
+        _deleteList.postValue(deleteSet)
     }
+
+    val deleteSet = mutableSetOf<Long>()
 }

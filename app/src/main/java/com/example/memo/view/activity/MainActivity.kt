@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
@@ -21,6 +22,9 @@ import com.example.memo.view.fragment.NoteFragment
 import com.example.memo.view.fragment.ToDoFragment
 import com.example.memo.viewmodel.MainActivityViewModel
 import com.example.memo.viewmodel.NoteViwModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -120,36 +124,53 @@ class MainActivity : BaseActivity() {
             binding.activityMainIncludeToolbar.toolbarTvSubtitle.text = it
         }
         mainViewModel.deleteMode.observe(this) {
+            Log.d("TAG_21", "subscribe: delete mode")
             isDelete = it
             invalidateOptionsMenu()
-//            if (it)enterDeleteMode() else exitDeleteMode()
+            if (it) binding.apply {
+                activityMainTabTvNote.setTextColor(Color.parseColor("#bfbfbf"))
+                activityMainTabIvNote.isSelected = false
+                activityMainTabIvNote.isClickable = false
+                deleteTabAdapt(mainViewModel.deleteSet)
+            } else {
+                tabSelect(resources.getString(R.string.activity_main_tab_note))
+            }
+            binding.viewmodel = mainViewModel
+            binding.activityMainIncludeToolbar.viewmodel = mainViewModel
         }
         mainViewModel.deleteList.observe(this) {
-            deleteCount = it.size
-            deleteSelectTitle(it.size)
-            if (it.size == 1) {
-                binding.apply {
-                    activityMainTabTvNote.setTextColor(Color.BLACK)
-                    activityMainTabIvNote.isSelected = true
-                    activityMainTabIvNote.isClickable = true
-                }
-            } else if (it.isEmpty()) {
-                binding.apply {
-                    activityMainTabTvNote.setTextColor(Color.parseColor("#bfbfbf"))
-                    activityMainTabIvNote.isSelected = false
-                    activityMainTabIvNote.isClickable = false
-                }
+            if (isDelete) {
+                Log.d("TAG_21", "subscribe: delete set change, size = ${it.size}")
+                deleteCount = it.size
+                deleteSelectTitle(deleteCount)
+                deleteTabAdapt(it)
             }
-            mainViewModel.title.value?.let { tag ->
-                if (it.size == itemCount(tag)) {
-                    binding.activityMainTabTvTodo.setText(R.string.activity_main_tab_cancel_select_all)
-                    binding.activityMainTabTvTodo.setTextColor(Color.parseColor("#2962FF"))
-                    binding.activityMainTabIvTodo.isSelected = true
-                } else {
-                    binding.activityMainTabTvTodo.setText(R.string.activity_main_tab_select_all)
-                    binding.activityMainTabTvTodo.setTextColor(Color.BLACK)
-                    binding.activityMainTabIvTodo.isSelected = false
-                }
+        }
+    }
+
+    private fun deleteTabAdapt(set: Set<Long>){
+        if (set.isNotEmpty()) {
+            binding.apply {
+                activityMainTabTvNote.setTextColor(Color.BLACK)
+                activityMainTabIvNote.isSelected = true
+                activityMainTabIvNote.isClickable = true
+            }
+        } else {
+            binding.apply {
+                activityMainTabTvNote.setTextColor(Color.parseColor("#bfbfbf"))
+                activityMainTabIvNote.isSelected = false
+                activityMainTabIvNote.isClickable = false
+            }
+        }
+        mainViewModel.title.value?.let { tag ->
+            if (set.size == itemCount(tag)) {
+                binding.activityMainTabTvTodo.setText(R.string.activity_main_tab_cancel_select_all)
+                binding.activityMainTabTvTodo.setTextColor(Color.parseColor("#2962FF"))
+                binding.activityMainTabIvTodo.isSelected = true
+            } else {
+                binding.activityMainTabTvTodo.setText(R.string.activity_main_tab_select_all)
+                binding.activityMainTabTvTodo.setTextColor(Color.BLACK)
+                binding.activityMainTabIvTodo.isSelected = false
             }
         }
     }
@@ -313,16 +334,6 @@ class MainActivity : BaseActivity() {
         popTag.showAsDropDown(binding.activityMainIncludeToolbar.root)
     }
 
-    private fun enterDeleteMode() {
-
-        TODO("Not yet implemented")
-    }
-
-    private fun exitDeleteMode() {
-
-        TODO("Not yet implemented")
-    }
-
     private fun deleteSelectAll(selectAll: Boolean) {
         mainViewModel.selectAll(selectAll)
     }
@@ -347,19 +358,20 @@ class MainActivity : BaseActivity() {
     }
 
     private fun delete() {
-        mainViewModel.deleteList.value?.let {
-            it.forEach { time ->
-                noteViewModel.getNoteByTime(time)
-            }
+        CoroutineScope(Dispatchers.Main).launch {
+            noteViewModel.deleteNotesByTime(mainViewModel.deleteSet)
+            mainViewModel.deleteSet.clear()
         }
     }
 
     private fun deleteSelectTitle(count: Int) {
+        Log.d("TAG_21", "deleteSelectTitle: $count")
         if (count == 0) {
-            binding.activityMainIncludeToolbar.toolbarTvTitle.text = "未选择"
+            binding.activityMainIncludeToolbar.toolbarTvDeleteTitle.text = "未选择"
         } else {
             val s = "已选择${count}项"
-            binding.activityMainIncludeToolbar.toolbarTvTitle.text = s
+            Log.d("TAG_21", "deleteSelectTitle: show $s")
+            binding.activityMainIncludeToolbar.toolbarTvDeleteTitle.text = s
         }
     }
 

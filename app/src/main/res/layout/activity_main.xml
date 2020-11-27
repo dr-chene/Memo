@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="com.example.memo.viewmodel.MainActivityViewModel" />
@@ -50,6 +52,7 @@
             android:layout_marginBottom="16dp"
             android:contentDescription="@string/desc_activity_main_fab_add"
             android:src="@drawable/ic_fab_add"
+            android:visibility="@{viewmodel.deleteMode? View.INVISIBLE : View.VISIBLE}"
             app:fabCustomSize="40dp"
             app:layout_constraintBottom_toTopOf="@id/activity_main_tab_bg_view"
             app:layout_constraintEnd_toEndOf="parent" />

@@ -88,6 +88,20 @@ class NoteEditActivity : BaseActivity() {
             TextEditSelectFragment()
         ).commitNow()
         initTags()
+        binding.activityNoteEditIvDelete.setOnClickListener {
+            AlertDialog.Builder(this).apply {
+                setMessage("是否删除当前笔记？")
+                setPositiveButton("删除") { _, _ ->
+                    CoroutineScope(Dispatchers.Main).launch {
+                        noteViewModel.deleteNoteByTime(curNote.createTime)
+                        super.onBackPressed()
+                    }
+                }
+                setNegativeButton("取消", null)
+            }.show().apply {
+                getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+            }
+        }
         binding.activityNoteEditIvBack.setOnClickListener {
             onBackPressed()
         }

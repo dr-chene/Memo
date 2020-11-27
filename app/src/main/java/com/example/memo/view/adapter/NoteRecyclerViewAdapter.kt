@@ -17,7 +17,7 @@ Created by chene on @date 20-11-20 下午3:31
  **/
 class NoteRecyclerViewAdapter(
     private val longClick: View.OnLongClickListener,
-    private val mainViewModel: MainActivityViewModel
+    var mainViewModel: MainActivityViewModel
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -51,17 +51,19 @@ class NoteRecyclerViewAdapter(
             }
             binding.setDeleteClick {
                 binding.recycleItemNoteDeleteBox.apply {
-                    callOnClick()
-                    if (isChecked) {
-                        mainViewModel.select(note.createTime)
-                    } else {
-                        mainViewModel.unSelect(note.createTime)
-                    }
+                    val before = isChecked
+                    isChecked = !before
                 }
             }
+            binding.recycleItemNoteDeleteBox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) mainViewModel.select(note.createTime) else mainViewModel.unSelect(
+                    note.createTime
+                )
+            }
             binding.root.setOnLongClickListener {
-                binding.recycleItemNoteDeleteBox.isSelected = true
                 longClick.onLongClick(it)
+                binding.recycleItemNoteDeleteBox.isChecked = true
+                true
             }
             binding.executePendingBindings()
         }

@@ -24,9 +24,13 @@ class NoteViwModel internal constructor(
         noteRepository.insertNote(note)
     }
 
-    suspend fun deleteNotes(notes: List<Note>) {
-        notes.forEach {
-            noteRepository.deleteNote(it)
+    suspend fun deleteNotesByTime(times: Set<Long>) {
+        times.forEach {
+            deleteNoteByTime(it)
         }
+    }
+
+    suspend fun deleteNoteByTime(time: Long){
+        noteRepository.deleteNoteByTime(time)
     }
 }

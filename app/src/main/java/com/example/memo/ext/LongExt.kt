@@ -14,7 +14,7 @@ fun Long.toNoteDate(): String {
     return if (abs(this - cur) <= 300000) "刚刚"
     else {
         val date = Date(this)
-        val sdFormatter = SimpleDateFormat("MMdd HH:mm")
+        val sdFormatter = SimpleDateFormat("MM月dd日 HH:mm")
         sdFormatter.format(date)
     }
 }
