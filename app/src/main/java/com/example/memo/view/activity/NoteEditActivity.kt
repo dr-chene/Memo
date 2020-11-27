@@ -112,7 +112,7 @@ class NoteEditActivity : BaseActivity() {
             noteEditHelper?.undo(binding.activityNoteEditContent.text)
         }
         binding.activityNoteEditIvImg.setOnClickListener {
-            TODO("select img")
+            imgSelect()
         }
         binding.setTags {
             popTagLites.showAsDropDown(binding.activityNoteEditIvTag)
@@ -252,6 +252,7 @@ class NoteEditActivity : BaseActivity() {
                 }
             }
     }
+
 
     private fun initTags() {
         liteTags = listOf(
@@ -420,5 +421,9 @@ class NoteEditActivity : BaseActivity() {
             preNote = curNote.copy()
             Log.d("TAG_15", "after saving: ${curNote.content}")
         }
+    }
+
+    private fun imgSelect() {
+        TODO("Not yet implemented")
     }
 }
