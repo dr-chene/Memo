@@ -26,6 +26,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import com.example.memo.App
 import com.example.memo.BaseActivity
 import com.example.memo.R
@@ -566,7 +567,7 @@ class NoteEditActivity : BaseActivity() {
                 this,
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 1
-            );
+            )
         } else {
             openAlbum()
         }

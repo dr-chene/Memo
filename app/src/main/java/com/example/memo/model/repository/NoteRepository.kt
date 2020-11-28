@@ -17,6 +17,8 @@ class NoteRepository(
 
     fun getStarNote(star: Boolean) = noteDao.getStarNote(star)
 
+    fun getNoteByString(str: String) = noteDao.getNoteByString(str)
+
     suspend fun insertNote(note: Note) {
         noteDao.insertNote(note)
     }

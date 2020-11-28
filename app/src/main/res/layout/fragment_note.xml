@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.example.memo.viewmodel.NoteViwModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -28,33 +37,75 @@
             app:layout_constraintStart_toStartOf="@id/fragment_note_iv_note_null"
             app:layout_constraintTop_toBottomOf="@id/fragment_note_iv_note_null" />
 
+        <ImageView
+            android:id="@+id/fragment_note_iv_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_back_arrow"
+            android:visibility="@{viewModel.isSearchMode()? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_note_et_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/fragment_note_et_search" />
+
+        <View
+            android:id="@+id/fragment_note_foreground_view_grey"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#30515151"
+            android:elevation="1dp"
+            android:visibility="@{viewModel.isSearchMode()? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_note_rv"
+            app:layout_constraintTop_toTopOf="@id/fragment_note_rv" />
+
         <EditText
             android:id="@+id/fragment_note_et_search"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/fragment_note_et_search"
             android:hint="@string/fragment_note_et_search"
             android:inputType="text"
             android:paddingStart="40dp"
+            android:paddingEnd="40dp"
             android:textColorHint="#515151"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/fragment_note_iv_back"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/fragment_note_iv_search"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_margin="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/ic_note_search"
             app:layout_constraintBottom_toBottomOf="@id/fragment_note_et_search"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/fragment_note_et_search"
+            app:layout_constraintTop_toTopOf="@id/fragment_note_et_search" />
+
+        <ImageView
+            android:id="@+id/fragment_note_iv_cancel"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_close_black"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_note_et_search"
+            app:layout_constraintEnd_toEndOf="@id/fragment_note_et_search"
             app:layout_constraintTop_toTopOf="@id/fragment_note_et_search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_note_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_note_et_search"

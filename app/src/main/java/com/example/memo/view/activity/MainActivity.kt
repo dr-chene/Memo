@@ -11,6 +11,7 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.asLiveData
 import com.example.memo.App
 import com.example.memo.BaseActivity
 import com.example.memo.R
@@ -145,6 +146,10 @@ class MainActivity : BaseActivity() {
                 deleteCount = it.size
                 deleteTabAdapt(it)
             }
+        }
+        noteViewModel.isSearchMode.observe(this) {
+            binding.activityMainFabAdd.visibility = if (it) View.GONE else View.VISIBLE
+            binding.noteViewModel = noteViewModel
         }
     }
 

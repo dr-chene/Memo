@@ -5,8 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.example.memo.R
 import com.example.memo.databinding.FragmentNoteBinding
@@ -29,6 +32,8 @@ class NoteFragment : Fragment() {
     private val mainViewModel: MainActivityViewModel by sharedViewModel()
     private val adapter: NoteRecyclerViewAdapter by inject { parametersOf(longClick) }
     private lateinit var list: List<Note>
+    private var isFirst = true
+    private var selectTag = "全部笔记"
     private val longClick by lazy {
         View.OnLongClickListener {
             mainViewModel.enterDeleteMode()
@@ -50,12 +55,66 @@ class NoteFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyItemChanged(0)
+    }
+
     private fun initView() {
         binding.fragmentNoteRv.adapter = adapter
+        binding.fragmentNoteEtSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                noteViewModel.enterSearchMode()
+            }
+        }
+        binding.fragmentNoteIvBack.setOnClickListener {
+            noteViewModel.exitSearchMode()
+        }
+        binding.fragmentNoteEtSearch.addTextChangedListener {
+            if (it != null) {
+                if (it.toString().isNotEmpty() && it.toString() != "") {
+                    binding.fragmentNoteIvCancel.visibility = View.VISIBLE
+                    noteViewModel.getSearchNote(it.toString()).observe(viewLifecycleOwner) { l ->
+                        binding.fragmentNoteForegroundViewGrey.visibility = View.INVISIBLE
+                        adapter.submitList(
+                            when (selectTag) {
+                                "全部笔记" -> l
+                                "收藏" -> l.filter { n ->
+                                    n.star
+                                }
+                                else -> l.filter { n ->
+                                    n.tag == selectTag
+                                }
+                            }
+                        )
+                        binding.fragmentNoteTvNoteNull.visibility =
+                            if (l.isEmpty()) View.VISIBLE else View.INVISIBLE
+                        binding.fragmentNoteIvNoteNull.visibility =
+                            if (l.isEmpty()) View.VISIBLE else View.INVISIBLE
+                    }
+                } else {
+                    binding.fragmentNoteIvNoteNull.visibility = View.INVISIBLE
+                    binding.fragmentNoteTvNoteNull.visibility = View.INVISIBLE
+                    binding.fragmentNoteForegroundViewGrey.visibility = View.VISIBLE
+                    binding.fragmentNoteIvCancel.visibility = View.GONE
+                    if (!isFirst) {
+                        adapter.submitList(list)
+                        Log.d("TAG_24", "initView: ${list.size}")
+                    } else isFirst = false
+                }
+            }
+        }
+        binding.fragmentNoteIvCancel.setOnClickListener {
+            binding.fragmentNoteEtSearch.setText("")
+        }
+        binding.fragmentNoteForegroundViewGrey.setOnClickListener {
+            noteViewModel.exitSearchMode()
+        }
     }
 
     private fun subscribe() {
         mainViewModel.title.observe(viewLifecycleOwner) {
+            selectTag = it
             showNoteByTag(it)
         }
         mainViewModel.selectAll.observe(viewLifecycleOwner) { f ->
@@ -68,6 +127,20 @@ class NoteFragment : Fragment() {
             searchBarAdapt(it)
             adapter.mainViewModel = mainViewModel
             adapter.notifyDataSetChanged()
+        }
+        noteViewModel.isSearchMode.observe(viewLifecycleOwner) {
+            binding.viewModel = noteViewModel
+            if (!it) {
+                binding.fragmentNoteEtSearch.clearFocus()
+                activity?.let { activity ->
+                    activity.window.peekDecorView()?.let {
+                        (activity.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                            it.windowToken,
+                            0
+                        )
+                    }
+                }
+            }
         }
     }
 
