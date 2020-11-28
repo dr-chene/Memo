@@ -25,38 +25,38 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="20dp"
                     android:gravity="start|center_vertical"
-                    android:text="拍照"
+                    android:text="@string/pop_window_img_select_camera"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="#F0F8FF" />
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/line_bg" />
 
                 <TextView
                     android:id="@+id/pop_photo"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="start|center_vertical"
-                    android:text="从相册选择"
+                    android:text="@string/pop_window_img_select_album"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:background="#F0F8FF" />
 
                 <TextView
                     android:id="@+id/pop_back"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="20dp"
-                    android:gravity="start|center_vertical"
-                    android:text="取消"
-                    android:textColor="@color/black"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/pop_window_img_select_cancel"
+                    android:textColor="@color/blue"
                     android:textSize="20sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

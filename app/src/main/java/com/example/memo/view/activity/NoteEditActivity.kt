@@ -1,9 +1,14 @@
 package com.example.memo.view.activity
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.style.*
@@ -14,6 +19,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
@@ -22,6 +30,7 @@ import com.example.memo.App
 import com.example.memo.BaseActivity
 import com.example.memo.R
 import com.example.memo.databinding.ActivityNoteEditBinding
+import com.example.memo.databinding.PopWindowImgSelectBinding
 import com.example.memo.databinding.PopWindowTagLiteBinding
 import com.example.memo.model.bean.*
 import com.example.memo.view.adapter.TagLiteClick
@@ -34,6 +43,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.io.File
 
 /**
 text edit select hide
@@ -64,6 +74,34 @@ class NoteEditActivity : BaseActivity() {
     private lateinit var liteTags: List<TagLite>
     private lateinit var tagsAdapter: TagLiteRecyclerViewAdapter
     private lateinit var tagLitesBinding: PopWindowTagLiteBinding
+    private lateinit var imgUri: Uri
+    private var isNotResult = true
+    private val imgSelectBinding by lazy {
+        PopWindowImgSelectBinding.inflate(LayoutInflater.from(this))
+    }
+    private val imgSelectPopWindow by lazy {
+        PopupWindow(
+            imgSelectBinding.root,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            true
+        ).apply {
+            imgSelectBinding.let {
+                it.popPhoto.setOnClickListener {
+                    imgFromAlbum()
+                    dismiss()
+                }
+                it.popCamera.setOnClickListener {
+                    imgFromCamera()
+                    dismiss()
+                }
+                it.popBack.setOnClickListener {
+                    dismiss()
+                    Toast.makeText(get(), "操作取消", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +118,48 @@ class NoteEditActivity : BaseActivity() {
         if (preNote != curNote) {
             modifyNotice()
         } else super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        isNotResult = false
+        when (requestCode) {
+            CAMERA -> {
+                if (resultCode == RESULT_OK) {
+                    binding.activityNoteEditContent.apply {
+                        insertImg(imgUri, width)
+                    }
+                } else {
+                    Toast.makeText(get(), "未获取到图片", Toast.LENGTH_SHORT).show()
+                }
+            }
+            ALBUM -> {
+                if (data != null) {
+                    binding.activityNoteEditContent.apply {
+                        data.data?.let {
+                            insertImg(it, width)
+                        }
+                    }
+                } else {
+                    Toast.makeText(get(), "未获取到图片", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openAlbum()
+            } else {
+                Toast.makeText(get(), "权限获取失败", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initView() {
@@ -205,27 +285,31 @@ class NoteEditActivity : BaseActivity() {
 
                 override fun afterTextChanged(s: Editable?) {
                     Log.d("TAG_06_2", "afterTextChanged: $s")
-                    s?.getSpans(0, s.length, CharacterStyle::class.java)?.forEach {
-                        Log.d("TAG_13", "$mStart afterTextChanged: ${it.autoToString()}")
-                    }
-                    s?.apply {
-                        Log.d("TAG_12", "write styles size: ${styles.size} isLoad: $isLoad")
-                        styles.clear()
-                        styles.apply {
-                            add(ForegroundColorSpan(mTextColor))
-                            add(RelativeSizeSpan(mTextSize))
-                            if (mIsBold) add(StyleSpan(Typeface.BOLD))
-                            if (mIsItalic) add(StyleSpan(Typeface.ITALIC))
-                            if (mIsUnderline) add(UnderlineSpan())
+                    if (isNotResult) {
+                        s?.getSpans(0, s.length, CharacterStyle::class.java)?.forEach {
+                            Log.d("TAG_13", "$mStart afterTextChanged: ${it.autoToString()}")
                         }
-                        noteEditHelper?.write(
-                            s,
-                            Location(mStart, mEnd),
-                            styles,
-                            isLoad,
-                            mBefore
-                        )
-                        if (isLoad) isLoad = false
+                        s?.apply {
+                            Log.d("TAG_12", "write styles size: ${styles.size} isLoad: $isLoad")
+                            styles.clear()
+                            styles.apply {
+                                add(ForegroundColorSpan(mTextColor))
+                                add(RelativeSizeSpan(mTextSize))
+                                if (mIsBold) add(StyleSpan(Typeface.BOLD))
+                                if (mIsItalic) add(StyleSpan(Typeface.ITALIC))
+                                if (mIsUnderline) add(UnderlineSpan())
+                            }
+                            noteEditHelper?.write(
+                                s,
+                                Location(mStart, mEnd),
+                                styles,
+                                isLoad,
+                                mBefore
+                            )
+                            if (isLoad) isLoad = false
+                        }
+                    } else {
+                        isNotResult = true
                     }
                 }
             })
@@ -238,7 +322,13 @@ class NoteEditActivity : BaseActivity() {
                     curNote = if (it.isNotEmpty()) {
                         it[0].apply {
                             val noteStyles = styles.toNoteStyles()
-                            noteEditHelper = NoteEditHelper(noteStyles.styles.toStyles())
+                            val noteImages = imgs.toNoteImages()
+                            Log.d("TAG_23", "initView: ${noteImages.images}")
+                            noteEditHelper =
+                                NoteEditHelper(
+                                    noteStyles.styles.toStyles(),
+                                    noteImages.images.toMutableMap()
+                                )
                             Log.d("TAG_08", content)
                             isLoad = true
                             liteTags.forEach { tagLite ->
@@ -247,15 +337,21 @@ class NoteEditActivity : BaseActivity() {
                                 }
                             }
                             binding.activityNoteEditContent.setText(content)
+                            noteEditHelper?.loadImgs(
+                                this@NoteEditActivity,
+                                binding.activityNoteEditContent.text,
+                                binding.activityNoteEditContent.width
+                            )
                         }
                     } else {
-                        noteEditHelper = NoteEditHelper(mutableMapOf())
+                        noteEditHelper = NoteEditHelper(mutableMapOf(), mutableMapOf())
                         Note(
                             System.currentTimeMillis(),
                             "",
                             "",
                             "",
                             System.currentTimeMillis(),
+                            "",
                             img = false,
                             star = false
                         )
@@ -429,8 +525,11 @@ class NoteEditActivity : BaseActivity() {
                     }
                 }
             }
+            val images = noteEditHelper?.imgs ?: mapOf()
             curNote.styles = NoteStyles(m).generateString()
             curNote.changeTime = System.currentTimeMillis()
+            curNote.imgs = NoteImages(images).generateString()
+            curNote.img = images.isNotEmpty()
             if (curNote.title == "") curNote.title = curNote.content
             Log.d("TAG_15", "save: ${curNote.content}")
             noteViewModel.insertNote(curNote)
@@ -441,6 +540,60 @@ class NoteEditActivity : BaseActivity() {
     }
 
     private fun imgSelect() {
-        TODO("Not yet implemented")
+        imgSelectPopWindow.showAsDropDown(binding.root)
+    }
+
+    private fun imgFromCamera() {
+        val imgName = "output_img_${System.currentTimeMillis()}.jpg"
+        val imgFile = File(externalCacheDir, imgName).apply {
+            if (exists()) delete()
+            createNewFile()
+        }
+        imgUri = FileProvider.getUriForFile(this, "com.example.memo.fileprovider", imgFile)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, imgUri)
+        }
+        startActivityForResult(intent, CAMERA)
+    }
+
+    private fun imgFromAlbum() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            );
+        } else {
+            openAlbum()
+        }
+    }
+
+    private fun openAlbum() {
+        val intent = Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_PICK
+        }
+        startActivityForResult(intent, ALBUM)
+    }
+
+    private fun insertImg(uri: Uri, screenWidth: Int) {
+        Log.d("TAG_24", "insertImg: ${uri.path}")
+        noteEditHelper?.insertImg(
+            this,
+            uri,
+            binding.activityNoteEditContent.text,
+            binding.activityNoteEditContent.selectionStart,
+            screenWidth,
+            false
+        )
+    }
+
+    companion object {
+        private const val CAMERA = 328
+        private const val ALBUM = 329
     }
 }

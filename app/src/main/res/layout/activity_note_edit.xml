@@ -59,84 +59,97 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/activity_note_edit_et_title"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="25dp"
-            android:background="#FAFAFA"
-            android:hint="@string/activity_note_edit_title_hint"
-            android:maxLength="45"
-            android:text="@={note.title}"
-            android:textColor="@color/black"
-            android:textSize="28sp"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_back" />
-
-        <ImageView
-            android:id="@+id/activity_note_edit_iv_tag"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="8dp"
-            android:onClick="@{tags}"
-            android:src="@drawable/ic_tag_empty"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title" />
-
-        <TextView
-            android:id="@+id/activity_note_edit_tv_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{tags}"
-            android:text="@={note.tag, default=未分类}"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_tag"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_tag" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:onClick="@{tags}"
-            android:src="@drawable/ic_down_grey"
-            app:layout_constraintStart_toEndOf="@id/activity_note_edit_tv_tag"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
-
-        <TextView
-            android:id="@+id/activity_note_edit_tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@{LongExtKt.day(note.changeTime), default=昨天}"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/activity_note_edit_tv_time"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
-
-        <TextView
-            android:id="@+id/activity_note_edit_tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{LongExtKt.time(note.changeTime), default=20_11}"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/activity_note_edit_et_title"
-            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
-
-        <EditText
-            android:id="@+id/activity_note_edit_content"
-            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="15dp"
-            android:autoLink="web"
-            android:background="#FAFAFA"
-            android:gravity="top"
-            android:scrollbars="vertical"
-            android:text="@={note.content, default=imcontent}"
-            android:textColor="@color/black"
-            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/activity_note_edit_tab_bg_view"
-            app:layout_constraintEnd_toEndOf="@id/activity_note_edit_et_title"
-            app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
-            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_tag" />
+            app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_back">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/activity_note_edit_et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="#FAFAFA"
+                    android:hint="@string/activity_note_edit_title_hint"
+                    android:maxLength="45"
+                    android:text="@={note.title}"
+                    android:textColor="@color/black"
+                    android:textSize="28sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/activity_note_edit_iv_tag"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    android:onClick="@{tags}"
+                    android:src="@drawable/ic_tag_empty"
+                    app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
+                    app:layout_constraintTop_toBottomOf="@id/activity_note_edit_et_title" />
+
+                <TextView
+                    android:id="@+id/activity_note_edit_tv_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{tags}"
+                    android:text="@={note.tag, default=未分类}"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/activity_note_edit_iv_tag"
+                    app:layout_constraintTop_toTopOf="@id/activity_note_edit_iv_tag" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:onClick="@{tags}"
+                    android:src="@drawable/ic_down_grey"
+                    app:layout_constraintStart_toEndOf="@id/activity_note_edit_tv_tag"
+                    app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
+
+                <TextView
+                    android:id="@+id/activity_note_edit_tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="@{LongExtKt.day(note.changeTime), default=昨天}"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@id/activity_note_edit_tv_time"
+                    app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
+
+                <TextView
+                    android:id="@+id/activity_note_edit_tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{LongExtKt.time(note.changeTime), default=20_11}"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@id/activity_note_edit_et_title"
+                    app:layout_constraintTop_toTopOf="@id/activity_note_edit_tv_tag" />
+
+                <EditText
+                    android:id="@+id/activity_note_edit_content"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:autoLink="web"
+                    android:background="#FAFAFA"
+                    android:gravity="top"
+                    android:minHeight="500dp"
+                    android:scrollbars="vertical"
+                    android:text="@={note.content, default=imcontent}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/activity_note_edit_et_title"
+                    app:layout_constraintStart_toStartOf="@id/activity_note_edit_et_title"
+                    app:layout_constraintTop_toBottomOf="@id/activity_note_edit_iv_tag" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
         <View
             android:id="@+id/activity_note_edit_tab_bg_view"

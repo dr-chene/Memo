@@ -14,4 +14,7 @@
     <string name="pop_text_edit_tv_title">文本编辑</string>
     <string name="pop_window_tv_note_tag">笔记分类</string>
     <string name="note_null">没有笔记</string>
+    <string name="pop_window_img_select_camera">拍照</string>
+    <string name="pop_window_img_select_album">从相册选择</string>
+    <string name="pop_window_img_select_cancel">取消</string>
 </resources>

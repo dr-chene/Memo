@@ -55,3 +55,16 @@ fun String.toStyle(): CharacterStyle {
         }
     }
 }
+
+data class NoteImages(
+    val images: Map<Int, String>
+)
+
+fun String.toNoteImages(): NoteImages =
+    GsonBuilder().enableComplexMapKeySerialization().create().fromJson(this, NoteImages::class.java)
+
+fun NoteImages.generateString(): String {
+    val str = GsonBuilder().enableComplexMapKeySerialization().create().toJson(this)
+    Log.d("TAG_23", "generateString: $str")
+    return str
+}

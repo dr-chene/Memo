@@ -15,6 +15,7 @@ data class Note(
     var content: String,
     var styles: String,
     var changeTime: Long,
+    var imgs: String,
     var img: Boolean,
     var star: Boolean,
     var tag: String = TAG_NULL
