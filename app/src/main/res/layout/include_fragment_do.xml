@@ -11,9 +11,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/app_name"
+            android:layout_margin="10dp"
+            android:text="待办功能因为时间关系并没有做\n只把ui画了"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

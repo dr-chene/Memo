@@ -25,6 +25,11 @@ import kotlin.collections.set
 
 /**
 Created by chene on @date 20-11-22 下午5:02
+ 笔记内容编辑辅助类，spannablestring实现，存在缺陷
+ 1.operation会随着内容增加大小会逐渐增大，最终可能导致gc
+ 2.没有实现删除操作的撤销
+ 3.现写的，所以不够稳定，可能会存在没有测到的bug导致闪退，有些逻辑也显得累赘甚至是愚蠢
+ 4.加载第一张图片时有时会加载多张，经过断点，logdebug后均未解决
  **/
 class NoteEditHelper(
     val operation: MutableMap<Location, List<CharacterStyle>>,
@@ -55,18 +60,12 @@ class NoteEditHelper(
         isLoad: Boolean,
         before: Int
     ) {
-        Log.d("TAG_30", "two photo: 4")
         CoroutineScope(Dispatchers.Main).launch {
             synchronized(styles) {
                 val count = loc.end - loc.start
                 if (count > 0) {
                     if (!isLoad) {
-                        Log.d("TAG_30", "two photo: 5 x 0")
                         operation[loc] = styles
-                        Log.d(
-                            "TAG_12",
-                            "write: ${operation[loc]?.map { it.autoToString() }.toString()}"
-                        )
                         operation.keys.forEach {
                             if (loc != it) {
                                 if (loc.start <= it.start) {
@@ -83,7 +82,6 @@ class NoteEditHelper(
                     operation.toSortedMap { l1, l2 ->
                         l1.start - l2.start
                     }
-                    Log.d("TAG_12", "write operation size: ${operation.size}")
                     load(s)
                 } else {
                     delete(loc.start - before, loc.start)
@@ -151,7 +149,6 @@ class NoteEditHelper(
         if (uri == null) {
             Toast.makeText(context, "获取图片失败", Toast.LENGTH_SHORT).show()
         } else {
-            Log.d("TAG_30", "two photo: 9 x 2")
             val job = CoroutineScope(Dispatchers.IO).async {
                 Glide.with(context)
                     .load(uri)
@@ -168,36 +165,28 @@ class NoteEditHelper(
                 val imgSpan = ImageSpan(context, job.await())
                 val tempUrl = "<img src=\"${uri}\" />"
                 if (!isLoad) {
-                    Log.d("TAG_30", "two photo: 9 x 0")
                     s.insert(start, tempUrl)
-                    Log.d("TAG_27", "insertImg: $uri")
                     imgs[start] = uri.toString()
                 }
-                Log.d("TAG_30", "two photo: 10 x 2")
                 s.setSpan(
                     imgSpan,
                     start,
                     start + tempUrl.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                Log.d("TAG_27", "insertImg: insert")
             }
         }
     }
 
     fun loadImgs(context: Context, s: Editable, screenWidth: Int) {
-        Log.d("TAG_30", "two photo: 7")
         imgs.keys.forEach {
             imgs[it]?.apply {
-                Log.d("TAG_28", "loadImgs: load")
-                Log.d("TAG_30", "two photo: 8 x 2")
                 insertImg(context, Uri.parse(this), s, it, screenWidth, true)
             }
         }
     }
 
     private fun load(s: Editable) {
-        Log.d("TAG_30", "two photo: 5")
         operation.keys.forEach { k ->
             operation[k]?.forEach { v ->
                 s.setSpan(v, k.start, k.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

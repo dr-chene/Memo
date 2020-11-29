@@ -4,14 +4,12 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.asLiveData
 import com.example.memo.App
 import com.example.memo.BaseActivity
 import com.example.memo.R
@@ -89,10 +87,10 @@ class MainActivity : BaseActivity() {
             )
             isRotate = !isRotate
         }
-        binding.activityMainTabIvNote.setOnClickListener {
+        binding.activityMainTabNote.setOnClickListener {
             tabSelect(binding.activityMainTabTvNote.text.toString())
         }
-        binding.activityMainTabIvTodo.setOnClickListener {
+        binding.activityMainTabTodo.setOnClickListener {
             tabSelect(binding.activityMainTabTvTodo.text.toString())
         }
         binding.activityMainIncludeToolbar.toolbarIvExit.setOnClickListener {
@@ -126,7 +124,6 @@ class MainActivity : BaseActivity() {
             binding.activityMainIncludeToolbar.toolbarTvSubtitle.text = it
         }
         mainViewModel.deleteMode.observe(this) {
-            Log.d("TAG_21", "subscribe: delete mode")
             isDelete = it
             invalidateOptionsMenu()
             if (it) binding.apply {
@@ -142,7 +139,6 @@ class MainActivity : BaseActivity() {
         }
         mainViewModel.deleteList.observe(this) {
             if (isDelete) {
-                Log.d("TAG_21", "subscribe: delete set change, size = ${it.size}")
                 deleteCount = it.size
                 deleteTabAdapt(it)
             }
@@ -379,12 +375,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun deleteSelectTitle(count: Int) {
-        Log.d("TAG_21", "deleteSelectTitle: $count")
         if (count == 0) {
             binding.activityMainIncludeToolbar.toolbarTvDeleteTitle.text = "未选择"
         } else {
             val s = "已选择${count}项"
-            Log.d("TAG_21", "deleteSelectTitle: show $s")
             binding.activityMainIncludeToolbar.toolbarTvDeleteTitle.text = s
         }
     }

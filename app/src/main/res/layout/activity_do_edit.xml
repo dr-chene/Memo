@@ -53,8 +53,8 @@
 
         <ImageView
             android:id="@+id/activity_do_edit_iv_todo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_todo"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
             android:background="@color/white"
             android:text="的绿色女克斯堡军来思考农村克"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activity_do_edit_iv_todo"
             app:layout_constraintTop_toTopOf="@id/activity_do_edit_iv_todo" />
@@ -85,8 +85,8 @@
 
         <ImageView
             android:id="@+id/activity_do_edit_iv_notice"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_notice"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
             android:layout_marginStart="20dp"
             android:text="的绿色女克斯堡军"
             android:textColor="@color/blue"
-            android:textSize="22sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activity_do_edit_iv_notice"
             app:layout_constraintTop_toTopOf="@id/activity_do_edit_iv_notice" />
@@ -116,8 +116,8 @@
 
         <ImageView
             android:id="@+id/activity_do_edit_iv_repeat"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_repeat"
             app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +130,7 @@
             android:layout_marginStart="20dp"
             android:text="重复"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activity_do_edit_iv_repeat"
             app:layout_constraintTop_toTopOf="@id/activity_do_edit_iv_repeat" />
@@ -147,8 +147,8 @@
 
         <ImageView
             android:id="@+id/activity_do_edit_iv_important"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_important"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +161,7 @@
             android:layout_marginStart="20dp"
             android:text="重要"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activity_do_edit_iv_important"
             app:layout_constraintTop_toTopOf="@id/activity_do_edit_iv_important" />
@@ -178,8 +178,8 @@
 
         <ImageView
             android:id="@+id/activity_do_edit_iv_remark"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_list"
             app:layout_constraintStart_toStartOf="parent"
@@ -193,7 +193,7 @@
             android:background="@color/white"
             android:text="kbdabvkajbvjkabjkvbdakbvkjablsbvslvlksdlvknalncasnckjacnlaknclaknvjsdnvlkmsdl;cams;cnasl;vnsklbn;vsldnvldabsnv;owdhvowenbdvkdsjc;kanskcb"
             android:textColor="@color/black"
-            android:textSize="22sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activity_do_edit_iv_remark"
             app:layout_constraintTop_toTopOf="@id/activity_do_edit_iv_remark" />

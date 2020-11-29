@@ -37,7 +37,6 @@ class TagRecyclerViewAdapter(private val viewModel: MainActivityViewModel) :
             binding.root.setOnClickListener {
                 viewModel.selectTag(tag.tag)
                 viewModel.sumNum(tag.count)
-                Log.d("TAG_07", "bind: ${tag.tag}")
             }
             binding.executePendingBindings()
         }

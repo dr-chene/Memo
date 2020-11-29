@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder
 
 /**
 Created by chene on @date 20-11-23 下午4:59
+使用Gson实现notecontent与string转换
  **/
 data class NoteStyles(
     val styles: MutableMap<Location, List<String>>

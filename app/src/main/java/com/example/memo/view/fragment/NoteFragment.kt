@@ -99,7 +99,6 @@ class NoteFragment : Fragment() {
                     binding.fragmentNoteIvCancel.visibility = View.GONE
                     if (!isFirst) {
                         adapter.submitList(list)
-                        Log.d("TAG_24", "initView: ${list.size}")
                     } else isFirst = false
                 }
             }
@@ -119,7 +118,6 @@ class NoteFragment : Fragment() {
         }
         mainViewModel.selectAll.observe(viewLifecycleOwner) { f ->
             binding.fragmentNoteRv.children.forEach {
-                Log.d("TAG_22", "subscribe: $f")
                 it.findViewById<CheckBox>(R.id.recycle_item_note_delete_box).isChecked = f
             }
         }
@@ -162,7 +160,6 @@ class NoteFragment : Fragment() {
         (if (tag == "全部笔记") noteViewModel.getNotes() else noteViewModel.getNotesByTag(tag)).observe(
             viewLifecycleOwner
         ) {
-            Log.d("TAG_18", "subscribe s")
             if (it.isEmpty()) {
                 binding.fragmentNoteIvSearch.visibility = View.INVISIBLE
                 binding.fragmentNoteEtSearch.visibility = View.INVISIBLE

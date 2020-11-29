@@ -114,7 +114,6 @@ class NoteEditActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        Log.d("TAG_17", "onBackPressed: ${preNote == curNote}")
         if (preNote != curNote) {
             modifyNotice()
         } else super.onBackPressed()
@@ -163,13 +162,12 @@ class NoteEditActivity : BaseActivity() {
     }
 
     private fun initView() {
-        Log.d("TAG_12", "init styles size: ${styles.size}")
         supportFragmentManager.beginTransaction().replace(
             R.id.activity_note_edit_select_pop_fragment_container,
             TextEditSelectFragment()
         ).commitNow()
         initTags()
-        binding.activityNoteEditIvDelete.setOnClickListener {
+        binding.activityNoteEditTabDelete.setOnClickListener {
             AlertDialog.Builder(this).apply {
                 setMessage("是否删除当前笔记？")
                 setPositiveButton("删除") { _, _ ->
@@ -193,7 +191,6 @@ class NoteEditActivity : BaseActivity() {
                 activityNoteEditContent.clearFocus()
             }
             if (curNote.title == "") {
-                Log.d("TAG_17", "initView: set curNote title ")
                 curNote.title = curNote.content.trim().let {
                     it.substringBefore("<img src=\"") + it.substringAfterLast("\" />")
                 }
@@ -208,7 +205,7 @@ class NoteEditActivity : BaseActivity() {
         binding.activityNoteEditIvUndo.setOnClickListener {
             noteEditHelper?.undo(binding.activityNoteEditContent.text)
         }
-        binding.activityNoteEditIvImg.setOnClickListener {
+        binding.activityNoteEditTabImg.setOnClickListener {
             if (binding.activityNoteEditContent.hasFocus()) {
                 imgSelect()
             } else {
@@ -218,7 +215,7 @@ class NoteEditActivity : BaseActivity() {
         binding.setTags {
             popTagLites.showAsDropDown(binding.activityNoteEditIvTag)
         }
-        binding.activityNoteEditIvStar.setOnClickListener {
+        binding.activityNoteEditTabStar.setOnClickListener {
             binding.activityNoteEditIvStar.apply {
                 if (isSelected) {
                     isSelected = false
@@ -244,7 +241,7 @@ class NoteEditActivity : BaseActivity() {
                 curNote.star = isSelected
             }
         }
-        binding.activityNoteEditIvText.setOnClickListener {
+        binding.activityNoteEditTabText.setOnClickListener {
             super.hideInput()
             textEditSelectViewModel.setSelectShow(true)
         }
@@ -283,19 +280,14 @@ class NoteEditActivity : BaseActivity() {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    Log.d("TAG_06_1", "onTextChanged: $s $start $before $count")
                     mStart = start
                     mEnd = start + count
                     mBefore = before
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    Log.d("TAG_06_2", "afterTextChanged: $s")
-                    Log.d("TAG_30", "two photo: 2")
                     if (isNotResult) {
                         s?.apply {
-                            Log.d("TAG_30", "two photo: 3")
-                            Log.d("TAG_12", "write styles size: ${styles.size} isLoad: $isLoad")
                             styles.clear()
                             styles.apply {
                                 add(ForegroundColorSpan(mTextColor))
@@ -328,22 +320,18 @@ class NoteEditActivity : BaseActivity() {
                         it[0].apply {
                             val noteStyles = styles.toNoteStyles()
                             val noteImages = imgs.toNoteImages()
-                            Log.d("TAG_23", "initView: ${noteImages.images}")
                             noteEditHelper =
                                 NoteEditHelper(
                                     noteStyles.styles.toStyles(),
                                     noteImages.images.toMutableMap()
                                 )
-                            Log.d("TAG_08", content)
                             isLoad = true
                             liteTags.forEach { tagLite ->
                                 if (tagLite.tag == tag) {
                                     binding.activityNoteEditIvTag.setImageDrawable(tagLite.drawable)
                                 }
                             }
-                            Log.d("TAG_30", "two photo: 1")
                             binding.activityNoteEditContent.setText(content)
-                            Log.d("TAG_30", "two photo: 6")
                             noteEditHelper?.loadImgs(
                                 this@NoteEditActivity,
                                 binding.activityNoteEditContent.text,
@@ -415,7 +403,6 @@ class NoteEditActivity : BaseActivity() {
                     activityNoteEditTvTag.text = tag.tag
                     popTagLites.dismiss()
                 }
-                Log.d("TAG_19", "onClick: ${curNote.tag}")
             }
         })
         tagLitesBinding.popWindowLiteTagRv.adapter = tagsAdapter
@@ -440,24 +427,19 @@ class NoteEditActivity : BaseActivity() {
                 mTextColor = it
             }
             textSize.observe(this@NoteEditActivity) {
-                Log.d("TAG_12", "textSize : $it")
                 mTextSize = it
             }
             isBold.observe(this@NoteEditActivity) {
-                Log.d("TAG_12", "isBold : $it")
                 mIsBold = it
             }
             isItalic.observe(this@NoteEditActivity) {
-                Log.d("TAG_12", "isItalic : $it")
                 mIsItalic = it
             }
             isUnderLine.observe(this@NoteEditActivity) {
-                Log.d("TAG_12", "isUnderLine : $it")
                 mIsUnderline = it
             }
             //设置对齐方式：无效果
             align.observe(this@NoteEditActivity) {
-                Log.d("TAG_20", "subscribe: $it")
                 binding.activityNoteEditContent.gravity =
                     binding.activityNoteEditContent.gravity or it
             }
@@ -520,10 +502,8 @@ class NoteEditActivity : BaseActivity() {
     }
 
     private fun save() {
-        Log.d("TAG_17", "save: ${preNote == curNote}")
         CoroutineScope(Dispatchers.Main).launch {
             val m = mutableMapOf<Location, List<String>>()
-            Log.d("TAG_15", "${noteEditHelper?.operation}")
             noteEditHelper?.operation?.let {
                 it.keys.forEach { l ->
                     it[l]?.let { list ->
@@ -541,7 +521,6 @@ class NoteEditActivity : BaseActivity() {
                             .contains("<img src=\"${str}\" />")
                     ) {
                         delete[it] = str
-                        Log.d("TAG_15", "save: delete")
                     }
                 }
             }
@@ -553,11 +532,9 @@ class NoteEditActivity : BaseActivity() {
             curNote.imgs = NoteImages(images).generateString()
             curNote.img = images.isNotEmpty()
             if (curNote.title == "") curNote.title = curNote.content
-            Log.d("TAG_15", "save: ${curNote.imgs}")
             noteViewModel.insertNote(curNote)
             preNote = curNote.copy()
             Toast.makeText(get(), "保存成功", Toast.LENGTH_SHORT).show()
-            Log.d("TAG_15", "after saving: ${curNote.content}")
         }
     }
 
@@ -603,7 +580,6 @@ class NoteEditActivity : BaseActivity() {
     }
 
     private fun insertImg(uri: Uri, screenWidth: Int) {
-        Log.d("TAG_24", "insertImg: ${uri.path}")
         noteEditHelper?.insertImg(
             this,
             uri,

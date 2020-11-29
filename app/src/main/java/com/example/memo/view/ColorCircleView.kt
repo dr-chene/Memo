@@ -12,6 +12,7 @@ import kotlin.math.min
 
 /**
 Created by chene on @date 20-11-21 上午10:52
+ 自定义view：实现一个有色圆点，有选中与非选中两种状态
  **/
 class ColorCircleView @JvmOverloads constructor(
     context: Context,

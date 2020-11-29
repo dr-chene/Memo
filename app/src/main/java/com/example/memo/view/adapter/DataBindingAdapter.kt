@@ -23,7 +23,6 @@ fun bindNoteCover(view: ImageView, note: Note) {
     }.let {
         it[it.firstKey()]
     }
-    Log.d("TAG", "bindNoteCover: $uriString")
     Glide.with(view.context)
         .load(Uri.parse(uriString))
         .centerCrop()

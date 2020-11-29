@@ -256,5 +256,41 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <View
+            android:id="@+id/activity_note_edit_tab_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintStart_toStartOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintEnd_toStartOf="@id/activity_note_edit_tab_img"/>
+
+        <View
+            android:id="@+id/activity_note_edit_tab_img"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintStart_toEndOf="@id/activity_note_edit_tab_text"
+            app:layout_constraintEnd_toStartOf="@id/activity_note_edit_tab_star"/>
+
+        <View
+            android:id="@+id/activity_note_edit_tab_star"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintStart_toEndOf="@id/activity_note_edit_tab_img"
+            app:layout_constraintEnd_toStartOf="@id/activity_note_edit_tab_delete"/>
+
+        <View
+            android:id="@+id/activity_note_edit_tab_delete"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintBottom_toBottomOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintEnd_toEndOf="@id/activity_note_edit_tab_bg_view"
+            app:layout_constraintStart_toEndOf="@id/activity_note_edit_tab_star"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

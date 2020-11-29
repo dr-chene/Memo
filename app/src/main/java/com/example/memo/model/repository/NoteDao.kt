@@ -22,6 +22,7 @@ interface NoteDao {
     @Query("SELECT * FROM note WHERE createTime = :createTime ORDER BY changeTime DESC")
     fun getNoteByCreateTime(createTime: Long): Flow<List<Note>>
 
+    //在title和content中搜索
     @Query("SELECT * FROM note WHERE content LIKE '%' || :str || '%' OR title LIKE '%' || :str || '%' ORDER BY changeTime DESC")
     fun getNoteByString(str: String): Flow<List<Note>>
 

@@ -15,5 +15,13 @@ class DoEditActivity : BaseActivity() {
         makeStatusBarTransparent()
         makeStatusBarIconDark()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_do_edit)
+
+        initView()
+    }
+
+    private fun initView() {
+        binding.activityDoEditIvBack.setOnClickListener {
+            onBackPressed()
+        }
     }
 }

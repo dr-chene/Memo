@@ -19,6 +19,7 @@ import org.koin.dsl.module
 
 /**
 Created by chene on @date 20-11-20 上午9:46
+koin依赖注入
  **/
 val appDataBaseModule = module {
 
