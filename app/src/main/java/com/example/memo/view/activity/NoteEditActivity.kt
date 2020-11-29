@@ -26,7 +26,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import com.example.memo.App
 import com.example.memo.BaseActivity
 import com.example.memo.R
@@ -195,7 +194,9 @@ class NoteEditActivity : BaseActivity() {
             }
             if (curNote.title == "") {
                 Log.d("TAG_17", "initView: set curNote title ")
-                curNote.title = curNote.content.trim()
+                curNote.title = curNote.content.trim().let {
+                    it.substringBefore("<img src=\"") + it.substringAfterLast("\" />")
+                }
                 binding.activityNoteEditEtTitle.setText(curNote.title)
             }
             noteEditHelper?.clear()
@@ -208,7 +209,11 @@ class NoteEditActivity : BaseActivity() {
             noteEditHelper?.undo(binding.activityNoteEditContent.text)
         }
         binding.activityNoteEditIvImg.setOnClickListener {
-            imgSelect()
+            if (binding.activityNoteEditContent.hasFocus()) {
+                imgSelect()
+            } else {
+                Toast.makeText(get(), "请选择正确的插入位置", Toast.LENGTH_SHORT).show()
+            }
         }
         binding.setTags {
             popTagLites.showAsDropDown(binding.activityNoteEditIvTag)
@@ -286,11 +291,10 @@ class NoteEditActivity : BaseActivity() {
 
                 override fun afterTextChanged(s: Editable?) {
                     Log.d("TAG_06_2", "afterTextChanged: $s")
+                    Log.d("TAG_30", "two photo: 2")
                     if (isNotResult) {
-                        s?.getSpans(0, s.length, CharacterStyle::class.java)?.forEach {
-                            Log.d("TAG_13", "$mStart afterTextChanged: ${it.autoToString()}")
-                        }
                         s?.apply {
+                            Log.d("TAG_30", "two photo: 3")
                             Log.d("TAG_12", "write styles size: ${styles.size} isLoad: $isLoad")
                             styles.clear()
                             styles.apply {
@@ -337,7 +341,9 @@ class NoteEditActivity : BaseActivity() {
                                     binding.activityNoteEditIvTag.setImageDrawable(tagLite.drawable)
                                 }
                             }
+                            Log.d("TAG_30", "two photo: 1")
                             binding.activityNoteEditContent.setText(content)
+                            Log.d("TAG_30", "two photo: 6")
                             noteEditHelper?.loadImgs(
                                 this@NoteEditActivity,
                                 binding.activityNoteEditContent.text,
@@ -449,6 +455,7 @@ class NoteEditActivity : BaseActivity() {
                 Log.d("TAG_12", "isUnderLine : $it")
                 mIsUnderline = it
             }
+            //设置对齐方式：无效果
             align.observe(this@NoteEditActivity) {
                 Log.d("TAG_20", "subscribe: $it")
                 binding.activityNoteEditContent.gravity =
@@ -526,13 +533,27 @@ class NoteEditActivity : BaseActivity() {
                     }
                 }
             }
-            val images = noteEditHelper?.imgs ?: mapOf()
+            val images = noteEditHelper?.imgs?.toMutableMap() ?: mutableMapOf()
+            val delete = mutableMapOf<Int, String>()
+            images.keys.forEach {
+                images[it]?.let { str ->
+                    if (!binding.activityNoteEditContent.text.toString()
+                            .contains("<img src=\"${str}\" />")
+                    ) {
+                        delete[it] = str
+                        Log.d("TAG_15", "save: delete")
+                    }
+                }
+            }
+            delete.keys.forEach {
+                images.remove(it)
+            }
             curNote.styles = NoteStyles(m).generateString()
             curNote.changeTime = System.currentTimeMillis()
             curNote.imgs = NoteImages(images).generateString()
             curNote.img = images.isNotEmpty()
             if (curNote.title == "") curNote.title = curNote.content
-            Log.d("TAG_15", "save: ${curNote.content}")
+            Log.d("TAG_15", "save: ${curNote.imgs}")
             noteViewModel.insertNote(curNote)
             preNote = curNote.copy()
             Toast.makeText(get(), "保存成功", Toast.LENGTH_SHORT).show()

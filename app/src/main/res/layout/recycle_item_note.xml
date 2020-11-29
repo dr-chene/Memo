@@ -40,8 +40,8 @@
                 android:id="@+id/recycle_item_note_img"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:src="@drawable/test"
                 android:visibility="@{note.img ? View.VISIBLE : View.GONE}"
+                bindNoteCover="@{note}"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintTop_toTopOf="parent" />
 

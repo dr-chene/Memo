@@ -1,9 +1,7 @@
 package com.example.memo.view.activity
 
-import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.Spannable
 import android.text.Spanned
@@ -23,7 +21,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
-import java.io.File
 import kotlin.collections.set
 
 /**
@@ -58,11 +55,13 @@ class NoteEditHelper(
         isLoad: Boolean,
         before: Int
     ) {
+        Log.d("TAG_30", "two photo: 4")
         CoroutineScope(Dispatchers.Main).launch {
             synchronized(styles) {
                 val count = loc.end - loc.start
                 if (count > 0) {
                     if (!isLoad) {
+                        Log.d("TAG_30", "two photo: 5 x 0")
                         operation[loc] = styles
                         Log.d(
                             "TAG_12",
@@ -88,7 +87,6 @@ class NoteEditHelper(
                     load(s)
                 } else {
                     delete(loc.start - before, loc.start)
-                    TODO("resume delete operation")
                 }
             }
         }
@@ -152,73 +150,54 @@ class NoteEditHelper(
     ) {
         if (uri == null) {
             Toast.makeText(context, "获取图片失败", Toast.LENGTH_SHORT).show()
-            return
-        }
-        val job = CoroutineScope(Dispatchers.IO).async {
-            Glide.with(context)
-                .load(uri)
-                .submit()
-                .get()
-                .let {
-                    val mWidth = it.intrinsicWidth
-                    val mHeight = it.intrinsicHeight
-                    val screenHeight = (1f * screenWidth / mWidth * mHeight).toInt()
-                    it.toBitmap(screenWidth, screenHeight)
-                }
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            val imgSpan = ImageSpan(context, job.await())
-            val tempUrl = "<img src=\"${uri.path}\" />"
-            if (!isLoad) {
-                s.insert(start, tempUrl)
-                uri.path?.let {
-                    val path = if (it.startsWith("/document")) {
-                        "/storage/emulated/0/" + uri.lastPathSegment?.substring(8)
-                    } else it
-                    imgs[start] = path
-                }
+        } else {
+            Log.d("TAG_30", "two photo: 9 x 2")
+            val job = CoroutineScope(Dispatchers.IO).async {
+                Glide.with(context)
+                    .load(uri)
+                    .submit()
+                    .get()
+                    .let {
+                        val mWidth = it.intrinsicWidth
+                        val mHeight = it.intrinsicHeight
+                        val screenHeight = (1f * screenWidth / mWidth * mHeight).toInt()
+                        it.toBitmap(screenWidth, screenHeight)
+                    }
             }
-            s.setSpan(imgSpan, start, start + tempUrl.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            CoroutineScope(Dispatchers.Main).launch {
+                val imgSpan = ImageSpan(context, job.await())
+                val tempUrl = "<img src=\"${uri}\" />"
+                if (!isLoad) {
+                    Log.d("TAG_30", "two photo: 9 x 0")
+                    s.insert(start, tempUrl)
+                    Log.d("TAG_27", "insertImg: $uri")
+                    imgs[start] = uri.toString()
+                }
+                Log.d("TAG_30", "two photo: 10 x 2")
+                s.setSpan(
+                    imgSpan,
+                    start,
+                    start + tempUrl.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                Log.d("TAG_27", "insertImg: insert")
+            }
         }
     }
 
     fun loadImgs(context: Context, s: Editable, screenWidth: Int) {
+        Log.d("TAG_30", "two photo: 7")
         imgs.keys.forEach {
             imgs[it]?.apply {
-                insertImg(context, getImageContentUri(context, this), s, it, screenWidth, true)
+                Log.d("TAG_28", "loadImgs: load")
+                Log.d("TAG_30", "two photo: 8 x 2")
+                insertImg(context, Uri.parse(this), s, it, screenWidth, true)
             }
         }
-    }
-
-    private fun getImageContentUri(context: Context, path: String): Uri? {
-        val cursor = context.contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            arrayOf(MediaStore.Images.Media._ID), MediaStore.Images.Media.DATA + "=? ",
-            arrayOf(path), null
-        )
-        if (cursor != null && cursor.moveToFirst()) {
-            val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
-            val baseUri = Uri.parse("content://media/external/images/media")
-            cursor.close()
-            return Uri.withAppendedPath(baseUri, "$id")
-        } else {
-            cursor?.close()
-            return if (File(path).exists()) {
-                val values = ContentValues().apply {
-                    put(MediaStore.Images.Media.DATA, path)
-                }
-                context.contentResolver.insert(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    values
-                )
-            } else {
-                null
-            }
-        }
-
     }
 
     private fun load(s: Editable) {
+        Log.d("TAG_30", "two photo: 5")
         operation.keys.forEach { k ->
             operation[k]?.forEach { v ->
                 s.setSpan(v, k.start, k.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
