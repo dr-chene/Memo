@@ -10,6 +10,6 @@
 
 **新发现bug（之前没有，为了上传演示图片发现的新bug，时间不多，会尽量改）：** 文字编辑样式选择窗口无法响应选择颜色的点击事件，事件会穿透到下方
 
-**演示图片：**  ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191514_com.example.memo.jpg) 
+**演示图片：**  ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191833_com.example.memo.jpg) 
                ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191618_com.example.memo.jpg)
                ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_202430_com.example.memo.jpg)
