@@ -17,12 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFF5F5F5"
-        android:clickable="true"
-        android:focusable="true"
         android:paddingStart="20dp"
         android:paddingTop="20dp"
         android:paddingEnd="20dp"
-        android:paddingBottom="30dp">
+        android:paddingBottom="30dp"
+        android:translationZ="10dp">
 
         <TextView
             android:id="@+id/pop_text_edit_tv_title"
@@ -148,10 +147,11 @@
 
         <com.example.memo.view.ColorCircleView
             android:id="@+id/pop_text_edit_iv_black"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:onClick="@{colorSelect}"
+            app:layout_constraintDimensionRatio="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/pop_text_edit_text_line" />

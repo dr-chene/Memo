@@ -2,6 +2,7 @@ package com.example.memo.view.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,13 +57,7 @@ class TextEditSelectFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.colorSelect = View.OnClickListener {
-            curSelect.unSelected()
-            curSelect = it as ColorCircleView
-            textEditSelectViewModel.colorSelect(Color.parseColor(curSelect.color))
-            curSelect.selected()
-        }
-
+        Log.d("TAG_f", "initView: into")
         binding.apply {
             popTextEditIvBlack.color = "#000000"
             popTextEditIvPurple.color = "#9C27B0"
@@ -71,6 +66,14 @@ class TextEditSelectFragment : Fragment() {
             popTextEditIvGreen.color = "#8BC34A"
             popTextEditIvYellow.color = "#FFEB3B"
             popTextEditIvRed.color = "#f44336"
+        }
+
+        binding.colorSelect = View.OnClickListener {
+            Log.d("TAG_f", "initView: click")
+            curSelect.unSelected()
+            curSelect = it as ColorCircleView
+            textEditSelectViewModel.colorSelect(Color.parseColor(curSelect.color))
+            curSelect.selected()
         }
 
         binding.popTextEditIvBlack.length.observe(viewLifecycleOwner) {

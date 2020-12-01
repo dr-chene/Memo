@@ -421,6 +421,12 @@ class NoteEditActivity : BaseActivity() {
         textEditSelectViewModel.selectShow.observe(this) {
             binding.activityNoteEditSelectPopFragmentContainer.visibility =
                 if (it) View.VISIBLE else View.GONE
+            binding.apply {
+                activityNoteEditTabText.isClickable = !it
+                activityNoteEditTabImg.isClickable = !it
+                activityNoteEditTabStar.isClickable = !it
+                activityNoteEditTabDelete.isClickable = !it
+            }
         }
         textEditSelectViewModel.apply {
             textColor.observe(this@NoteEditActivity) {
