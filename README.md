@@ -12,4 +12,4 @@
 
 **演示图片：**  ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191514_com.example.memo.jpg) 
                ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191618_com.example.memo.jpg)
-               ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191514_com.example.memo.jpg)
+               ![](https://github.com/dr-chene/Memo/blob/main/Screenshot_20201201_191833_com.example.memo.jpg)
